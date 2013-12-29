@@ -1,0 +1,53 @@
+#######################################
+# Syntax Coloring Map For gpio_expander
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+mcp23s17	KEYWORD1
+mcp23017	KEYWORD1
+mcp23s08	KEYWORD1
+mcp23008	KEYWORD1
+mcp23s18	KEYWORD1
+mcp23018	KEYWORD1
+mcp23016	KEYWORD1
+pcf8574	KEYWORD1
+pcf8574ap	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+writeByte	KEYWORD2
+writeWord	KEYWORD2
+readAddress	KEYWORD2
+gpioPinMode	KEYWORD2
+gpioPort	KEYWORD2
+readGpioPort	KEYWORD2
+readGpioPortFast	KEYWORD2
+gpioDigitalWrite	KEYWORD2
+gpioDigitalRead	KEYWORD2
+gpioRegisterRead	KEYWORD2
+gpioDigitalReadFast	KEYWORD2
+gpioRegisterWrite	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+IOCON	LITERAL1
+IODIR	LITERAL1
+GPPU	LITERAL1
+GPIO	LITERAL1
+GPINTEN	LITERAL1
+IPOL	LITERAL1
+DEFVAL	LITERAL1
+INTF	LITERAL1
+INTCAP	LITERAL1
+OLAT	LITERAL1
+INTCON	LITERAL1
+
+
