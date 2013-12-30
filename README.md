@@ -29,7 +29,7 @@ prefere the supereasy to use PCF series from NTX. I personally prefere the Micro
 because I can choose from I2C and SPI and they have an extra feature called HAEN that
 allow me to share CS pin between 8 different chips in SPI mode!
 This library it's an improvement of my old MCP23xxx library since it's smaller, faster
-and deal with all MCP23xx series plus PCF from NTX. 
+and deal with all MCP23xx series plus PCF series from NTX. 
 The purpose is a small and easy library that can be easily expanded but still have the ability
 to handle directly the registers.
 If you need a simple expander, use this library and choose between many GPIO's chip by using
