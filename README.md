@@ -39,7 +39,7 @@ If you need a simple expander, use this library and choose between many GPIO's c
 The MCP23xxx registers are stored in each chip library extension so you can share demos between different chips (there's some exceptions like the MCP23016 that has limited features and you cannot share some features between NTX and MCP ones since they are internally very different).<br>
 Library is modular, every chip it's an extension of the same library so it's easy to expand.<br>
 
-version 0.5b2 - beta release - only some driver released and partially tested!!!<br>
+version <b>0.5b2</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
