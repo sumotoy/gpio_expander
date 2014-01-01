@@ -20,7 +20,7 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT
 - <b>mcp23016</b> --  Microchip -- 16 ----- I2C ------- INT
 - <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT
-- <b>pcf8574ap</b> --- NTX --------- 8  ------ I2C ------- INT
+- <b>pcf8574a</b> ---- NTX --------- 8  ------ I2C ------- INT/same as 8574 with different addressing
 - <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT
 - <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address
 - <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT
