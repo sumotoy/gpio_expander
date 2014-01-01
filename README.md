@@ -14,13 +14,15 @@ Here's a list of the GPIO's chip managed:<br>
 
 - <b>mcp23s17</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
 - <b>mcp23017</b> -- Microchip -- 16 ----- I2C ------- INT
-- <b>mcp2308</b> ---- Microchip --- 8  ----- I2C ------- INT
+- <b>mcp2308</b>  ---  Microchip --- 8 ------ I2C ------- INT
 - <b>mcp23s08</b> --	Microchip --- 8  ----- SPI ------- HAEN/INT
 - <b>mcp23s18</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
 - <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT
-- <b>mcp23016</b> -- Microchip -- 16 ----- I2C ------- INT
+- <b>mcp23016</b> --  Microchip -- 16 ----- I2C ------- INT
 - <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT
 - <b>pcf8574ap</b> --- NTX --------- 8  ------ I2C ------- INT
+- <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT
+- <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
