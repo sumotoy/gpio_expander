@@ -40,7 +40,7 @@ between different chips (there's some exceptions like the MCP23016 that has limi
 and you cannot share some features between NTX and MCP ones since they are internally very different).
 Library it's modular, every chip it's an extension of the same library so it's easy to expand.
 
-version 0.5b1 - beta release - still NOT TESTED, just writed up.
+version 0.5b2 - beta release - partially tested!!!
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
