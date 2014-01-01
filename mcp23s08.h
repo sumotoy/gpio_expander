@@ -21,32 +21,32 @@ pcf8574			NTX				8			I2C					INT
 pcf8574ap		NTX				8			I2C					INT
 --------------------------------------------------------------------------------------
 MCP23S08 Driver
-version 0.5b1
+version 0.5b2
+--------------------------------------------------------------------------------------
+Version history:
+0.5b1: first release, just coded and never tested
+0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
+--------------------------------------------------------------------------------------
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 --------------------------------------------------------------------------------------
 */
 
-/* ------------------------------ MCP23S17 WIRING ------------------------------------
+/* ------------------------------ MCP23S08 WIRING ------------------------------------
 This chip has a very useful feature called HAEN that allow you to share the same CS pin trough
-8 different addresses. Of course chip has to be Microchip and should be assigned to different addresses!
+4 different addresses. Of course chip has to be Microchip and should be assigned to different addresses!
 
-Basic Address:  00100 A2 A1 A0 (from 0x20 to 0x27)
-A2,A1,A0 tied to ground = 0x20
+Basic Address:  001000 A1 A0 (from 0x20 to 0x23)
+A1,A0 tied to ground = 0x20
 				__ __
-		IOB-0 [|  U  |] IOA-7
-		IOB-1 [|     |] IOA-6
-		IOB-2 [|     |] IOA-5
-		IOB-3 [|     |] IOA-4
-		IOB-4 [|     |] IOA-3
-		IOB-5 [|     |] IOA-2
-		IOB-6 [|     |] IOA-1
-		IOB-7 [|     |] IOA-0
-		++++  [|     |] INT-A
-		GND   [|     |] INT-B
-		CS    [|     |] RST (connect to +)
-		SCK   [|     |] A2
-		MOSI  [|     |] A1
-		MISO  [|_____|] A0
+	->  sck   [|  U  |] ++++
+	->  mosi  [|     |] IO-7
+	<-  miso  [|     |] IO-6
+		A1    [|     |] IO-5
+		A0    [|     |] IO-4
+ rst (con.+)  [|     |] IO-3
+		cs    [|     |] IO-2
+		int   [|     |] IO-1
+		GND   [|_____|] IO-0
 */
 #ifndef _MCP23S08_H_
 #define _MCP23S08_H_
@@ -62,12 +62,13 @@ class mcp23s08 : public gpio_expander
 public:
 	mcp23s08(const uint8_t csPin,const uint8_t haenAdrs);
 
-	virtual void 	begin(uint8_t protocolInitOverride=0); //protocolInitOverride=1	will not init the SPI	
+	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	
 	void 			gpioPinMode(bool mode);						//set all pins to INPUT or OUTPUT
 	void 			gpioPinMode(uint8_t pin, bool mode);		//set a unique pin as IN(1) or OUT (0)
 	void 			gpioPort(uint8_t value);					//write data to all pins
+	//void			gpioPort(byte lowByte, byte highByte);		//same as abowe but uses 2 separate bytes (not applicable to this chip)
 	uint8_t 		readGpioPort();								//read the state of the pins (all)
 	uint8_t 		readGpioPortFast();							
 	
@@ -76,8 +77,10 @@ public:
 	unsigned int 	gpioRegisterRead(byte reg);					//read a chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
 	void 			gpioRegisterWrite(byte reg,byte data);		//write a chip register
+	void			portPullup(bool data);						// true=pullup, false=pulldown all pins
 	// direct access commands
     void			writeByte(byte addr, byte data);	
+	//void 			writeWord(byte addr, uint16_t data);        // not applicable
 	uint8_t 		readAddress(byte addr);
 	
 	//------------------------- REGISTERS

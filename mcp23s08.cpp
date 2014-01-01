@@ -11,7 +11,7 @@
 
 mcp23s08::mcp23s08(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
-	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
+	if (haenAdrs >= 0x20 && haenAdrs <= 0x23){//HAEN works between 0x20...0x23
 		_adrs = haenAdrs;
 		_useHaen = 1;
 	} else {
@@ -35,7 +35,7 @@ mcp23s08::mcp23s08(const uint8_t csPin,const uint8_t haenAdrs){
 }
 
 
-void mcp23s08::begin(uint8_t protocolInitOverride) {
+void mcp23s08::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
 		SPI.setClockDivider(SPI_CLOCK_DIV4); 
@@ -172,4 +172,14 @@ void mcp23s08::endSend(){
 #else
 	digitalWrite(_cs, HIGH);
 #endif
+}
+
+
+void mcp23s08::portPullup(bool data) {
+	if (data){
+		_gpioState = 0xFF;
+	} else {
+		_gpioState = 0x00;
+	}
+	writeByte(GPPU, _gpioState);
 }

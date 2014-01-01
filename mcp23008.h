@@ -21,32 +21,29 @@ pcf8574			NTX				8			I2C					INT
 pcf8574ap		NTX				8			I2C					INT
 --------------------------------------------------------------------------------------
 MCP23008 Driver
-version 0.5b1
+version 0.5b2
+--------------------------------------------------------------------------------------
+Version history:
+0.5b1: first release, just coded and never tested
+0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
+--------------------------------------------------------------------------------------
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 --------------------------------------------------------------------------------------
 */
 
-/* ------------------------------ MCP23S17 WIRING ------------------------------------
-This chip has a very useful feature called HAEN that allow you to share the same CS pin trough
-8 different addresses. Of course chip has to be Microchip and should be assigned to different addresses!
-
+/* ------------------------------ MCP23008 WIRING ------------------------------------
 Basic Address:  00100 A2 A1 A0 (from 0x20 to 0x27)
 A2,A1,A0 tied to ground = 0x20
 				__ __
-		IOB-0 [|  U  |] IOA-7
-		IOB-1 [|     |] IOA-6
-		IOB-2 [|     |] IOA-5
-		IOB-3 [|     |] IOA-4
-		IOB-4 [|     |] IOA-3
-		IOB-5 [|     |] IOA-2
-		IOB-6 [|     |] IOA-1
-		IOB-7 [|     |] IOA-0
-		++++  [|     |] INT-A
-		GND   [|     |] INT-B
-		CS    [|     |] RST (connect to +)
-		SCK   [|     |] A2
-		MOSI  [|     |] A1
-		MISO  [|_____|] A0
+	<->  scl  [|  U  |] ++++
+	<->  sda  [|     |] IO-7
+	    A2    [|     |] IO-6
+		A1    [|     |] IO-5
+		A0    [|     |] IO-4
+ rst (con.+)  [|     |] IO-3
+		-NC-  [|     |] IO-2
+		int   [|     |] IO-1
+		GND   [|_____|] IO-0
 */
 #ifndef _MCP23008_H_
 #define _MCP23008_H_
@@ -62,7 +59,7 @@ class mcp23008 : public gpio_expander
 public:
 	mcp23008(const uint8_t adrs);
 
-	virtual void 	begin(uint8_t protocolInitOverride=0); //protocolInitOverride=1	will not init the SPI	
+	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	
 	void 			gpioPinMode(bool mode);						//set all pins to INPUT or OUTPUT
@@ -76,6 +73,7 @@ public:
 	unsigned int 	gpioRegisterRead(byte reg);					//read a chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
 	void 			gpioRegisterWrite(byte reg,byte data);		//write a chip register
+	void			portPullup(bool data);						// true=pullup, false=pulldown all pins
 	// direct access commands
     void			writeByte(byte addr, byte data);	
 	uint8_t 		readAddress(byte addr);
@@ -95,10 +93,6 @@ public:
 	
 private:
 	uint8_t 		_adrs;
-	//uint8_t 		_readCmd;
-	//uint8_t 		_writeCmd;
-	//void 			startSend(bool mode);
-	//void 			endSend();
 	uint8_t			_gpioDirection;
 	uint8_t			_gpioState;
 };

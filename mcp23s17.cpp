@@ -35,7 +35,7 @@ mcp23s17::mcp23s17(const uint8_t csPin,const uint8_t haenAdrs){
 }
 
 
-void mcp23s17::begin(uint8_t protocolInitOverride) {
+void mcp23s17::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
 		SPI.setClockDivider(SPI_CLOCK_DIV4); 
@@ -63,7 +63,7 @@ void mcp23s17::writeByte(byte addr, byte data){
 	endSend();
 }
 
-void mcp23s17::writeWord(byte addr, word data){
+void mcp23s17::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
 	SPI.transfer(word2lowByte(data));
@@ -184,4 +184,14 @@ void mcp23s17::endSend(){
 #else
 	digitalWrite(_cs, HIGH);
 #endif
+}
+
+
+void mcp23s17::portPullup(bool data) {
+	if (data){
+		_gpioState = 0xFFFF;
+	} else {
+		_gpioState = 0x0000;
+	}
+	writeWord(GPPU, _gpioState);
 }

@@ -31,7 +31,7 @@ mcp23008::mcp23008(const uint8_t adrs){
 }
 
 
-void mcp23008::begin(uint8_t protocolInitOverride) {
+void mcp23008::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		Wire.begin();
 	}	
@@ -45,7 +45,8 @@ void mcp23008::begin(uint8_t protocolInitOverride) {
 
 
 void mcp23008::writeByte(byte addr, byte data){
-	Wire.beginTransmission(addr);
+	Wire.beginTransmission(_adrs);
+	Wire.write(addr);
 	Wire.write(data);
 	Wire.endTransmission();
 }
@@ -139,4 +140,14 @@ unsigned int mcp23008::gpioRegisterRead(byte reg){
 
 void mcp23008::gpioRegisterWrite(byte reg,byte data){
 	writeByte(reg,data);
+}
+
+
+void mcp23008::portPullup(bool data) {
+	if (data){
+		_gpioState = 0xFF;
+	} else {
+		_gpioState = 0x00;
+	}
+	writeByte(GPPU, _gpioState);
 }

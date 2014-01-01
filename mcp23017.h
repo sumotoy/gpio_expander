@@ -21,7 +21,12 @@ pcf8574			NTX				8			I2C					INT
 pcf8574ap		NTX				8			I2C					INT
 --------------------------------------------------------------------------------------
 MCP23017 Driver
-version 0.5b1
+version 0.5b2
+--------------------------------------------------------------------------------------
+Version history:
+0.5b1: first release, just coded and never tested
+0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
+--------------------------------------------------------------------------------------
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 --------------------------------------------------------------------------------------
 */
@@ -58,9 +63,9 @@ class mcp23017 : public gpio_expander
 {
 
 public:
-	mcp23017(const uint8_t adrs);
+	mcp23017(const uint8_t adrs);//0x20...0x27
 
-	virtual void 	begin(uint8_t protocolInitOverride=0); //protocolInitOverride=1	will not init the SPI	
+	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	
 	void 			gpioPinMode(bool mode);						//set all pins to INPUT or OUTPUT
@@ -75,9 +80,10 @@ public:
 	unsigned int 	gpioRegisterRead(byte reg);					//read a chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
 	void 			gpioRegisterWrite(byte reg,byte data);		//write a chip register
+	void			portPullup(bool data);						// true=pullup, false=pulldown all pins
 	// direct access commands
     void			writeByte(byte addr, byte data);	
-	void 			writeWord(byte addr, word data);
+	void 			writeWord(byte addr, uint16_t data);
 	uint16_t 		readAddress(byte addr);
 	
 	//------------------------- REGISTERS

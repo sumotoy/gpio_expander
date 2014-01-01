@@ -30,10 +30,10 @@ mcp23017::mcp23017(const uint8_t adrs){
 }
 
 
-void mcp23017::begin(uint8_t protocolInitOverride) {
+void mcp23017::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		Wire.begin();
-	}	
+	}
 	delay(100);
 	writeByte(IOCON,0b00100000);//read datasheet for details!
 	_gpioDirection = 0xFFFF;//all in
@@ -43,14 +43,15 @@ void mcp23017::begin(uint8_t protocolInitOverride) {
 
 
 void mcp23017::writeByte(byte addr, byte data){
-	Wire.beginTransmission(addr);
+	Wire.beginTransmission(_adrs);
+	Wire.write(addr);//witch register?
 	Wire.write(data);
 	Wire.endTransmission();
 }
 
-void mcp23017::writeWord(byte addr, word data){
-	//startSend(0);
-	Wire.beginTransmission(addr);
+void mcp23017::writeWord(byte addr, uint16_t data){
+	Wire.beginTransmission(_adrs);
+	Wire.write(addr);//witch register?
 	Wire.write(word2lowByte(data));
 	Wire.write(word2highByte(data));
 	Wire.endTransmission();
@@ -58,7 +59,7 @@ void mcp23017::writeWord(byte addr, word data){
 
 uint16_t mcp23017::readAddress(byte addr){
 	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
+	Wire.write(addr);//witch register?
 	Wire.endTransmission();
     Wire.requestFrom((uint8_t)_adrs,(uint8_t)2);
 	byte low_byte = Wire.read();
@@ -73,8 +74,8 @@ void mcp23017::gpioPinMode(bool mode){
 		_gpioDirection = 0xFFFF;
 	} else {
 		_gpioDirection = 0x0000;
-		_gpioState = 0x0000;
 	}
+	_gpioState = 0x0000;//reset this var in that case
 	writeWord(IODIR,_gpioDirection);
 }
 
@@ -150,4 +151,15 @@ unsigned int mcp23017::gpioRegisterRead(byte reg){
 void mcp23017::gpioRegisterWrite(byte reg,byte data){
 	writeWord(reg,data);
 }
+
+
+void mcp23017::portPullup(bool data) {
+	if (data){
+		_gpioState = 0xFFFF;
+	} else {
+		_gpioState = 0x0000;
+	}
+	writeWord(GPPU, _gpioState);
+}
+
 

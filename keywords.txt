@@ -13,7 +13,7 @@ mcp23008	KEYWORD1
 mcp23s18	KEYWORD1
 mcp23018	KEYWORD1
 mcp23016	KEYWORD1
-pcf8574	KEYWORD1
+pcf8574p	KEYWORD1
 pcf8574ap	KEYWORD1
 
 #######################################
@@ -33,6 +33,7 @@ gpioDigitalRead	KEYWORD2
 gpioRegisterRead	KEYWORD2
 gpioDigitalReadFast	KEYWORD2
 gpioRegisterWrite	KEYWORD2
+portPullup	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

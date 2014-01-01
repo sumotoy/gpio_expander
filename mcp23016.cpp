@@ -25,7 +25,7 @@ mcp23016::mcp23016(const uint8_t adrs){
 }
 
 
-void mcp23016::begin(uint8_t protocolInitOverride) {
+void mcp23016::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		Wire.begin();
 	}	
@@ -38,13 +38,15 @@ void mcp23016::begin(uint8_t protocolInitOverride) {
 
 
 void mcp23016::writeByte(byte addr, byte data){
-	Wire.beginTransmission(addr);
+	Wire.beginTransmission(_adrs);
+	Wire.write(addr);
 	Wire.write(data);
 	Wire.endTransmission();
 }
 
-void mcp23016::writeWord(byte addr, word data){
-	Wire.beginTransmission(addr);
+void mcp23016::writeWord(byte addr, uint16_t data){
+	Wire.beginTransmission(_adrs);
+	Wire.write(addr);
 	Wire.write(word2lowByte(data));
 	Wire.write(word2highByte(data));
 	Wire.endTransmission();
@@ -144,3 +146,4 @@ unsigned int mcp23016::gpioRegisterRead(byte reg){
 void mcp23016::gpioRegisterWrite(byte reg,byte data){
 	writeWord(reg,data);
 }
+
