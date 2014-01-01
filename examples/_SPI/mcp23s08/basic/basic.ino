@@ -3,10 +3,11 @@
 
 //define CS pin and using HAEN or not
 //to use HAEN, address should be 0x20 to 0x23
-mcp23s08 mcp(10,0x20);//instance
+mcp23s08 mcp(10,0x23);//instance
 
 void setup(){
   mcp.begin();//x.begin(true) will override automatic SPI initialization
+  mcp.gpioPinMode(OUTPUT);
 }
 
 void loop(){

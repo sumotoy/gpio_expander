@@ -90,7 +90,7 @@ uint8_t mcp23008::readGpioPortFast(){
 }
 
 int mcp23008::gpioDigitalReadFast(uint8_t pin){
-	if (pin < 7){//0...7
+	if (pin < 8){//0...7
 		int temp = bitRead(_gpioState,pin);
 		return temp;
 	} else {
@@ -99,7 +99,7 @@ int mcp23008::gpioDigitalReadFast(uint8_t pin){
 }
 
 void mcp23008::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 7){//0...7
+	if (pin < 8){//0...7
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
 		} else {
@@ -111,7 +111,7 @@ void mcp23008::gpioPinMode(uint8_t pin, bool mode){
 
 
 void mcp23008::gpioDigitalWrite(uint8_t pin, bool value){
-	if (pin < 7){//0...7
+	if (pin < 8){//0...7
 		if (value){
 			bitSet(_gpioState,pin);
 		} else {
@@ -123,7 +123,7 @@ void mcp23008::gpioDigitalWrite(uint8_t pin, bool value){
 
 
 int mcp23008::gpioDigitalRead(uint8_t pin){
-	if (pin < 7) return (int)(readAddress(GPIO) & 1 << pin);
+	if (pin < 8) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
