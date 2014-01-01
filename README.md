@@ -8,24 +8,25 @@ gpio_expander library
 An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
 Here's a list of the GPIO's chip managed:<br>
 
-- model -------- company -- pins -- protocol - Special Features
+<b>----- model ----- company -- pins -- protocol ---- features ---------</b>
 
 --------------------------------------------------------------------------------------
 
-- mcp23s17 -- Microchip -- 16 ----- SPI ------- HAEN/INT
-- mcp23017 -- Microchip -- 16 ----- I2C ------- INT
-- mcp2308 ---- Microchip --- 8  ----- I2C ------- INT
-- mcp23s08 --	Microchip --- 8  ----- SPI ------- HAEN/INT
-- mcp23s18 -- Microchip -- 16 ----- SPI ------- HAEN/INT
-- mcp23018 -- Microchip -- 16 ----- I2C ------- INT
-- mcp23016 -- Microchip -- 16 ----- I2C ------- INT
-- pcf8574 ------ NTX --------- 8  ------ I2C ------- INT
-- pcf8574ap --- NTX --------- 8  ------ I2C ------- INT
+- <b>mcp23s17</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
+- <b>mcp23017</b> -- Microchip -- 16 ----- I2C ------- INT
+- <b>mcp2308</b> ---- Microchip --- 8  ----- I2C ------- INT
+- <b>mcp23s08</b> --	Microchip --- 8  ----- SPI ------- HAEN/INT
+- <b>mcp23s18</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
+- <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT
+- <b>mcp23016</b> -- Microchip -- 16 ----- I2C ------- INT
+- <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT
+- <b>pcf8574ap</b> --- NTX --------- 8  ------ I2C ------- INT
 
 --------------------------------------------------------------------------------------
-
+When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
+pins and some periferal (like LCD) uses many pins. For this reason I use a lot external GPIO's chips.<br><br>
 Microchip series MCP23xxx GPIO expanders are great chips but they can be a nightmare if you want to deal with registers, timings, etc., for these reasons a lot of coders prefere the supereasy to use PCF series from NTX.<br> 
-I personally prefere the Microchip series because I can choose from I2C and SPI and they have an extra feature called <b>HAEN</b> that allow me to share CS pin between 8 different chips in SPI mode!<br>
+I personally prefere the Microchip series because I can choose from I2C and SPI and they have an extra feature called <b>HAEN</b> that allow me to <i>share CS pin between 8 different chips in SPI mode!</i><br>
 This library it's an improvement of my old MCP23xxx library since it's smaller, faster and deal with all MCP23xx series plus PCF series from NTX.<br>
 I designed as a small and easy library that can be easily expanded but still have the ability to handle directly the registers for special purposes.<br>
 If you need a simple expander, use this library and choose between many GPIO's chip by using really simply commands, but if you need a specialized GPIO you can still use this library and use the direct access to chip registers (see the keypad demo).<br>
