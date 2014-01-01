@@ -23,6 +23,10 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>pcf8574ap</b> --- NTX --------- 8  ------ I2C ------- INT
 - <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT
 - <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address
+- <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT
+- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection
+- <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- 
+- <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- 
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
