@@ -31,6 +31,7 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- INT ------------------------------------------------------ out/in dev
 - <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT ------------------------------------------------------ planned
 - <b>xra1405</b> ------ EXAR ------ 16 ------- SPI ------- INT/Hi Speed SPI -------------------------------------- planned
+- <b>xra1200</b> ------ EXAR -------- 8 ------- I2C ------- INT -------------------------------------------------------- planned
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
