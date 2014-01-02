@@ -32,6 +32,8 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT ------------------------------------------------------ planned
 - <b>xra1405</b> ------ EXAR ------ 16 ------- SPI ------- INT/Hi Speed SPI -------------------------------------- planned
 - <b>xra1200</b> ------ EXAR -------- 8 ------- I2C ------- INT -------------------------------------------------------- planned
+- <b>fxl6408</b> ------ FAIRCHILD -- 8 ------- I2C ------- INT -------------------------------------------------------- planned
+- <b>bu1852guw </b> --- ROHM ------ 20 ----- I2C ------- INT -------------------------------------------------------- planned
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
@@ -43,6 +45,7 @@ I designed as a small and easy library that can be easily expanded but still hav
 If you need a simple expander, use this library and choose between many GPIO's chip by using really simply commands, but if you need a specialized GPIO you can still use this library and use the direct access to chip registers (see the keypad demo).<br>
 The MCP23xxx registers are stored in each chip library extension so you can share demos between different chips (there's some exceptions like the MCP23016 that has limited features and you cannot share some features between NTX and MCP ones since they are internally very different).<br>
 Library is modular, every chip it's an extension of the same library so it's easy to expand.<br>
+Why create an unified library? It's better create single libraries for chip families? Seems no!<br>Almost all GPIO chips have really similar programming, only Microchip families has more features and looks more complicated but the access it's almost the same for all so it have sense to build up an unified way to access these chips with common commands so you can easily use the chip you like without have to recode anithing, just be sure you don't need some special features of some particular chip.<br>
 
 version <b>0.5b2</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
