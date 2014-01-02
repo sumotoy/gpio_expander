@@ -96,15 +96,21 @@ Here's a list of the GPIO's chip managed:<br>
 </table>
 
 
+<b>Status Legend:</b></br>
+<dl>
+<dt>done:</dt>
+<dd>fully working.</dd>
+<dt>dev:</dt>
+<dd>currently in development.</dd>
+<dt>testing:</dt>
+<dd>currently in testing, may works or partially.</dd>
+<dt>planned:</dt>
+<dd>will be developed soon and added before the release.</dd>
+<dt>planned[R2]:</dt>
+<dd>will not included in the release but planned for version 2.</dd>
+</dl>
 
 --------------------------------------------------------------------------------------
-Status Legend:
-- done: fully working.
-- dev: currently in development.
-- planned: will be added before 1.0 rel.
-- testing: currently in testing, may work or partially.
-- planned (R2): will be added in release 2.0.
-
 
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
 pins and some periferal (like LCD) uses many pins. For this reason I use a lot external GPIO's chips.<br><br>
