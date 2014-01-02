@@ -33,10 +33,19 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>xra1405</b> ------ EXAR ------ 16 ------- SPI ------- INT/Hi Speed SPI -------------------------------------- planned
 - <b>xra1200</b> ------ EXAR -------- 8 ------- I2C ------- INT -------------------------------------------------------- planned
 - <b>fxl6408</b> ------ FAIRCHILD -- 8 ------- I2C ------- INT -------------------------------------------------------- planned
-- <b>bu1852guw </b> --- ROHM ------ 20 ----- I2C ------- INT -------------------------------------------------------- planned
-- <b>cy8C9560 </b> ---- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (rel 2)
+- <b>bu1852guw</b> - ROHM ------- 20 ----- I2C ------- INT -------------------------------------------------------- planned
+- <b>cy8C9560</b> --- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (rel 2)
+- <b>sx1509</b> ------- SEMTECH --- 16 ----- I2C ------- INT/Led Driver/Level shifter ------------------------ dev
 
 --------------------------------------------------------------------------------------
+Status Legend:
+- done: fully working.
+- dev: currently in development.
+- planned: will be added before 1.0 rel.
+- out/in dev: outputs working, inputs not tested or in development, will be ready soon.
+- planned (rev2): will be added in release 2.0.
+
+
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
 pins and some periferal (like LCD) uses many pins. For this reason I use a lot external GPIO's chips.<br><br>
 Microchip series MCP23xxx GPIO expanders are great chips but they can be a nightmare if you want to deal with registers, timings, etc., for these reasons a lot of coders prefere the supereasy to use PCF series from NTX.<br> 
