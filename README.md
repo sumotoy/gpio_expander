@@ -8,28 +8,28 @@ gpio_expander library
 An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
 Here's a list of the GPIO's chip managed:<br>
 
-<b>----- model ----- company -- pins -- protocol ---- features ---------</b>
+<b>----- model ----- company -- pins -- protocol ---- features ------------------------------------------------- dev state ------</b>
 
 --------------------------------------------------------------------------------------
 
-- <b>mcp23s17</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
-- <b>mcp23017</b> -- Microchip -- 16 ----- I2C ------- INT
-- <b>mcp2308</b>  ---  Microchip --- 8 ------ I2C ------- INT
-- <b>mcp23s08</b> --	Microchip --- 8  ----- SPI ------- HAEN/INT
-- <b>mcp23s18</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT
-- <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT
-- <b>mcp23016</b> --  Microchip -- 16 ----- I2C ------- INT
-- <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT
-- <b>pcf8574a</b> ---- NTX --------- 8  ------ I2C ------- INT/same as 8574 with different addressing
-- <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT
-- <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address
-- <b>pca9555</b> ------ NTX -------- 16  ------ I2C ------- INT/64 address
-- <b>tca9555</b> --------- TI --------- 16  ------ I2C ------- INT/64 address
-- <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing
-- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing
-- <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- 
-- <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- 
-- <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- 
+- <b>mcp23s17</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT ------------------------------------------ full
+- <b>mcp23017</b> -- Microchip -- 16 ----- I2C ------- INT --------------------------------------------------- full
+- <b>mcp2308</b>  ---  Microchip --- 8 ------ I2C ------- INT --------------------------------------------------- full
+- <b>mcp23s08</b> --	Microchip --- 8  ----- SPI ------- HAEN/INT ------------------------------------------- full
+- <b>mcp23s18</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT ------------------------------------------ full
+- <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT --------------------------------------------------- full
+- <b>mcp23016</b> --  Microchip -- 16 ----- I2C ------- INT --------------------------------------------------- full
+- <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT --------------------------------------------------- dev
+- <b>pcf8574a</b> ---- NTX --------- 8  ------ I2C ------- INT/same as 8574 with different addressing - dev
+- <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT ------------------------------------------------- planned
+- <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address --------------------------------- planned
+- <b>pca9555</b> ------ NTX -------- 16  ------ I2C ------- INT/64 address --------------------------------- out/in dev
+- <b>tca9555</b> --------- TI --------- 16  ------ I2C ------- INT/64 address --------------------------------- out/in dev
+- <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing ---- out/in dev
+- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing ---- out/in dev
+- <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- INT -------------------------------------------------- out/in dev
+- <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- INT -------------------------------------------------- out/in dev
+- <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT -------------------------------------------------- out/in dev
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
