@@ -8,7 +8,7 @@ gpio_expander library
 An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
 Here's a list of the GPIO's chip managed:<br>
 
-<b>----- model ----- company -- pins -- protocol ---- features ------------------------------------------------- dev state ------</b>
+<b>----- model ----- company -- pins -- protocol ---- features ------------------------------------------------- dev state </b>
 
 --------------------------------------------------------------------------------------
 
