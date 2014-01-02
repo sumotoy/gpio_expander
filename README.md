@@ -60,6 +60,46 @@ The MCP23xxx registers are stored in each chip library extension so you can shar
 Library is modular, every chip it's an extension of the same library so it's easy to expand.<br>
 Why create an unified library? It's better create single libraries for chip families? Seems no!<br>Almost all GPIO chips have really similar programming, only Microchip families has more features and looks more complicated but the access it's almost the same for all so it have sense to build up an unified way to access these chips with common commands so you can easily use the chip you like without have to recode anithing, just be sure you don't need some special features of some particular chip.<br>
 
+ How To Use:
+ 
+ Library it's unified so you just need toi include the chip and his protocol, example for <b>mcp23017</b>
+ 
+```
+ #include <Wire.h>
+ #include <mcp23017.h>
+```
+ then you need an instance:
+ 
+ ```
+ mcp23017 gpio(address);//instance
+ ```
+ where the address it's specific to the chip (read chip.h file)
+ 
+ From below the commands are the same for all chip with some exceptions:
+  - Some chip it's 8 bit so it doesn't have the <b>writeWord</b> command
+  - Some chip has limited features so not all registers are accessible, take a look to the chip.h file)
+ 
+ Commands are:
+
+ ```
+ gpio.begin();//gpio.begin(1); will not init the protocol (useful when multiple chip are used or you want to manually init it
+ 
+ gpio.gpioPinMode(INPUT or OUTPUT);//set all pin accordly
+ gpio.gpioPinMode(pin,mode);//set an individual pin as INPUT or OUTPUT
+ gpio.port(data);//data=8..xx bits, depends of chip. set all pins at once
+ gpio.port(low byte,high byte);//useful for 16 bit GPIOs that have 2 ports of 8 bit
+ gpio.readGpioPort();//read the state of all pins, it returns 8...xx bits depending of chip
+ gpio.readGpioPortFast();//experimental. Read the state of the library buffer instead of the chip.
+ gpio.gpioDigitalWrite(pin,state);//set individual pin HIGH or LOW
+ gpio.gpioDigitalRead(pin);//read the state of one pin
+ gpio.gpioDigitalReadFast(pin);//experimental. Read the state of a pin from the library buffer
+ gpio.gpioRegisterRead(register);//not available to all chip, read the specific register
+ gpio.gpioRegisterWrite(register,data);//write directly a chip register
+ gpio.writeByte(register,byte);
+ gpio.writeWord(register,word);
+```
+ 
+
 version <b>0.5b2</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
