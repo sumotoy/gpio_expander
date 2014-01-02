@@ -35,7 +35,7 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>xra1201</b> ------ EXAR -------- 16 ------ I2C ------- INT -------------------------------------------------------- planned
 - <b>fxl6408</b> ------ FAIRCHILD -- 8 ------- I2C ------- INT -------------------------------------------------------- planned
 - <b>bu1852guw</b> - ROHM ------- 20 ----- I2C ------- INT -------------------------------------------------------- planned
-- <b>cy8C9560</b> --- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (rel 2)
+- <b>cy8C9560</b> --- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (R2)
 - <b>sx1509</b> ------- SEMTECH --- 16 ----- I2C ------- INT/Led Driver/Level shifter ------------------------ dev
 - <b>sx1505</b> ------- SEMTECH --- 8 ------ I2C ------- INT/indipendent rails ------------------------------- dev
 - <b>sx1506</b> ------- SEMTECH --- 16 ----- I2C ------- INT/indipendent rails ------------------------------- dev
@@ -46,7 +46,7 @@ Status Legend:
 - dev: currently in development.
 - planned: will be added before 1.0 rel.
 - out/in dev: outputs working, inputs not tested or in development, will be ready soon.
-- planned (rev2): will be added in release 2.0.
+- planned (R2): will be added in release 2.0.
 
 
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
