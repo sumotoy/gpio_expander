@@ -34,6 +34,7 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>xra1200</b> ------ EXAR -------- 8 ------- I2C ------- INT -------------------------------------------------------- planned
 - <b>fxl6408</b> ------ FAIRCHILD -- 8 ------- I2C ------- INT -------------------------------------------------------- planned
 - <b>bu1852guw </b> --- ROHM ------ 20 ----- I2C ------- INT -------------------------------------------------------- planned
+- <b>cy8C9560 </b> ---- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (rel 2)
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
