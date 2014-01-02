@@ -29,7 +29,7 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing ----- out/in dev
 - <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- INT ------------------------------------------------------ out/in dev
 - <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- INT ------------------------------------------------------ out/in dev
-- <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT ------------------------------------------------------ out/in dev
+- <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT ------------------------------------------------------ planned
 
 --------------------------------------------------------------------------------------
 When working with microcontrollers it's common run quickly out of I/O's, that because these small chips have few
