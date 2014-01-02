@@ -8,44 +8,101 @@ gpio_expander library
 An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
 Here's a list of the GPIO's chip managed:<br>
 
-<b>----- model ----- company -- pins -- protocol ---- features ------------------------------------------------- dev state </b>
+<table>
+<tr>
+<td><b>chip</b></td><td><b>company</b></td><td><b>pins</b></td><td><b>protocol</b></td><td><b>features</b></td><td><b>status</b></td>
+</tr>
+<tr>
+<td><b>mcp23s17</b></td><td>Microchip</td><td>16</td><td>SPI</td><td>HAEN/INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp23017</b></td><td>Microchip</td><td>16</td><td>I2C</td><td>INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp2308</b></td><td>Microchip</td><td>8</td><td>I2C</td><td>INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp23s08</b></td><td>Microchip</td><td>8</td><td>SPI</td><td>HAEN/INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp23s18</b></td><td>Microchip</td><td>16</td><td>SPI</td><td>HAEN/INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp23018</b></td><td>Microchip</td><td>16</td><td>I2C</td><td>INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>mcp23016</b></td><td>Microchip</td><td>16</td><td>I2C</td><td>INT</td><td>done</td>
+</tr>
+<tr>
+<td><b>pcf8574</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT</td><td>dev</td>
+</tr>
+<tr>
+<td><b>pcf8574a</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT/different address range</td><td>dev</td>
+</tr>
+<tr>
+<td><b>pcf8575</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>pca9698</b></td><td>NTX</td><td>40</td><td>I2C</td><td>INT/64adrs</td><td>planned</td>
+</tr>
+<tr>
+<td><b>pca9555</b></td><td>NTX</td><td>16</td><td>I2C</td><td>INT/64adrs</td><td>testing</td>
+</tr>
+<tr>
+<td><b>tca9555</b></td><td>TI</td><td>16</td><td>I2C</td><td>INT/64adrs</td><td>testing</td>
+</tr>
+<tr>
+<td><b>max6957</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>planned</td>
+</tr>
+<tr>
+<td><b>max7301</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>planned</td>
+</tr>
+<tr>
+<td><b>max7311</b></td><td>TI</td><td>16</td><td>I2C</td><td>INT/64adrs/hot insertion</td><td>testing</td>
+</tr>
+<tr>
+<td><b>max7318</b></td><td>TI</td><td>16</td><td>I2C</td><td>INT/64adrs/hot insertion</td><td>testing</td>
+</tr>
+<tr>
+<td><b>rd1073</b></td><td>LATTICE</td><td>16</td><td>SPI</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>xra1200</b></td><td>EXAR</td><td>8</td><td>I2C</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>xra1201</b></td><td>EXAR</td><td>16</td><td>I2C</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>xra1405</b></td><td>EXAR</td><td>16</td><td>SPI</td><td>INT/24Mhz SPI</td><td>dev</td>
+</tr>
+<tr>
+<td><b>fxl6408</b></td><td>FAIRCHILD</td><td>8</td><td>I2C</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>bu1852guw</b></td><td>ROHM</td><td>20</td><td>I2C</td><td>INT</td><td>planned</td>
+</tr>
+<tr>
+<td><b>cy8C9560</b></td><td>CYPRESS</td><td>60</td><td>I2C</td><td>INT/EEPROM/max 100Khz I2C</td><td>planned</td>
+</tr>
+<tr>
+<td><b>sx1505</b></td><td>SEMTECH</td><td>8</td><td>I2C</td><td>INT/Indipendent rails</td><td>dev</td>
+</tr>
+<tr>
+<td><b>sx1506</b></td><td>SEMTECH</td><td>16</td><td>I2C</td><td>INT/Indipendent rails</td><td>dev</td>
+</tr>
+<tr>
+<td><b>sx1509</b></td><td>SEMTECH</td><td>16</td><td>I2C</td><td>INT/LED driver/Level Shifter</td><td>dev</td>
+</tr>
+</table>
 
---------------------------------------------------------------------------------------
 
-- <b>mcp23s17</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT ------------------------------------------------ done
-- <b>mcp23017</b> -- Microchip -- 16 ----- I2C ------- INT --------------------------------------------------------- done
-- <b>mcp2308</b>  ---  Microchip --- 8 ------ I2C ------- INT --------------------------------------------------------- done
-- <b>mcp23s08</b> --	Microchip --- 8  ----- SPI ------- HAEN/INT ------------------------------------------------- done
-- <b>mcp23s18</b> -- Microchip -- 16 ----- SPI ------- HAEN/INT ------------------------------------------------ done
-- <b>mcp23018</b> -- Microchip -- 16 ----- I2C ------- INT --------------------------------------------------------- done
-- <b>mcp23016</b> --  Microchip -- 16 ----- I2C ------- INT --------------------------------------------------------- done
-- <b>pcf8574</b> ------ NTX --------- 8  ------ I2C ------- INT --------------------------------------------------------- dev
-- <b>pcf8574a</b> ---- NTX --------- 8  ------ I2C ------- INT/same as 8574 with different addressing ----- dev
-- <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT -------------------------------------------------------- planned
-- <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address ---------------------------------------- planned
-- <b>pca9555</b> ------ NTX -------- 16  ------ I2C ------- INT/64 address ---------------------------------------- out/in dev
-- <b>tca9555</b> --------- TI --------- 16  ------ I2C ------- INT/64 address ---------------------------------------- out/in dev
-- <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing ----- out/in dev
-- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing ----- out/in dev
-- <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- INT ------------------------------------------------------ out/in dev
-- <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- INT ------------------------------------------------------ out/in dev
-- <b>rd1073</b> ------- LATTICE --- 16 ------- SPI ------- INT ------------------------------------------------------ planned
-- <b>xra1405</b> ------ EXAR ------ 16 ------- SPI ------- INT/Hi Speed SPI -------------------------------------- planned
-- <b>xra1200</b> ------ EXAR -------- 8 ------- I2C ------- INT -------------------------------------------------------- planned
-- <b>xra1201</b> ------ EXAR -------- 16 ------ I2C ------- INT -------------------------------------------------------- planned
-- <b>fxl6408</b> ------ FAIRCHILD -- 8 ------- I2C ------- INT -------------------------------------------------------- planned
-- <b>bu1852guw</b> - ROHM ------- 20 ----- I2C ------- INT -------------------------------------------------------- planned
-- <b>cy8C9560</b> --- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (R2)
-- <b>sx1509</b> ------- SEMTECH --- 16 ----- I2C ------- INT/Led Driver/Level shifter ------------------------ dev
-- <b>sx1505</b> ------- SEMTECH --- 8 ------ I2C ------- INT/indipendent rails ---------------------------------- dev
-- <b>sx1506</b> ------- SEMTECH --- 16 ----- I2C ------- INT/indipendent rails ---------------------------------- dev
 
 --------------------------------------------------------------------------------------
 Status Legend:
 - done: fully working.
 - dev: currently in development.
 - planned: will be added before 1.0 rel.
-- out/in dev: outputs working, inputs not tested or in development, will be ready soon.
+- testing: currently in testing, may work or partially.
 - planned (R2): will be added in release 2.0.
 
 
