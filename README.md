@@ -36,6 +36,8 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>bu1852guw</b> - ROHM ------- 20 ----- I2C ------- INT -------------------------------------------------------- planned
 - <b>cy8C9560</b> --- CYPRESS --- 60 ----- I2C ------- INT/EEPROM/max 100Khz ------------------------ planned (rel 2)
 - <b>sx1509</b> ------- SEMTECH --- 16 ----- I2C ------- INT/Led Driver/Level shifter ------------------------ dev
+- <b>sx1505</b> ------- SEMTECH --- 8 ------ I2C ------- INT/indipendent rails ------------------------------- dev
+- <b>sx1506</b> ------- SEMTECH --- 16 ----- I2C ------- INT/indipendent rails ------------------------------- dev
 
 --------------------------------------------------------------------------------------
 Status Legend:
