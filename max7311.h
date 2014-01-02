@@ -20,10 +20,11 @@ mcp23016		Microchip		16			I2C					INT
 pcf8574			NTX				8			I2C					INT
 pcf8574ap		NTX				8			I2C					INT
 max7318			MAXIM			16			I2C					INT/Hot Insert Protection/64 addresses
+max7311			MAXIM			16			I2C					INT/Hot Insert Protection/64 addresses
 TCA9555			TI			    16			I2C					INT/64 addresses/(uses same driver as max7318/pca9555)
 PCA9555			NTX			    16			I2C					INT/64 addresses/(uses same driver as max7318/tca9555)
 --------------------------------------------------------------------------------------
-max7318 (PCA9555-TCA9555) Driver
+max7311
 version 0.5b3
 --------------------------------------------------------------------------------------
 Version history:
@@ -123,19 +124,19 @@ SDA GND SDA 1  1  0  1  1  0  1  0xDA
 SDA V+  SCL 1  1  0  1  1  1  0  0xDC
 SDA V+  SDA 1  1  0  1  1  1  1  0xDE
 */
-#ifndef _MAX7318_H_
-#define _MAX7318_H_
+#ifndef _MAX7311_H_
+#define _MAX7311_H_
 
 #include <inttypes.h>
 
 #include "gpio_expander.h"
 
 
-class max7318 : public gpio_expander
+class max7311 : public gpio_expander
 {
 
 public:
-	max7318(const uint8_t adrs);
+	max7311(const uint8_t adrs);
 	
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
@@ -162,6 +163,7 @@ public:
 	byte			GPPU;//GPO
 	byte			GPIO;//GPI
 	byte			IPOL;//GPPOL
+	byte			GPTIM;//timeout register
 	
 private:
 	uint8_t 		_adrs;

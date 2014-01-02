@@ -123,19 +123,19 @@ SDA GND SDA 1  1  0  1  1  0  1  0xDA
 SDA V+  SCL 1  1  0  1  1  1  0  0xDC
 SDA V+  SDA 1  1  0  1  1  1  1  0xDE
 */
-#ifndef _MAX7318_H_
-#define _MAX7318_H_
+#ifndef _PCA9555_H_
+#define _PCA9555_H_
 
 #include <inttypes.h>
 
 #include "gpio_expander.h"
 
 
-class max7318 : public gpio_expander
+class pca9555 : public gpio_expander
 {
 
 public:
-	max7318(const uint8_t adrs);
+	pca9555(const uint8_t adrs);
 	
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 

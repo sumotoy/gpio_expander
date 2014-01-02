@@ -4,12 +4,12 @@
 
 #include <Arduino.h>
 
-#include "max7318.h"
+#include "max7311.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
 
 
-max7318::max7318(const uint8_t adrs){
+max7311::max7311(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
 		_error = false;
@@ -23,11 +23,12 @@ max7318::max7318(const uint8_t adrs){
 	IODIR = 	0x06;//Configuration Registers (0x06..0x07)
 	GPPU = 		0x02;//Output Port Registers (0x02..0x03)
 	GPIO = 		0x00;//Input Port Registers (0x00..0x01)
-	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)(
+	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)
+	GPTIM =     0x08;//Timeout register (bit 0)
 }
 
 
-void max7318::begin(bool protocolInitOverride) {
+void max7311::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){
 		Wire.begin();
 	}
@@ -37,7 +38,7 @@ void max7318::begin(bool protocolInitOverride) {
 }
 
 
-void max7318::writeByte(byte addr, byte data){
+void max7311::writeByte(byte addr, byte data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
@@ -46,7 +47,7 @@ void max7318::writeByte(byte addr, byte data){
 	}
 }
 
-void max7318::writeWord(byte addr, uint16_t data){
+void max7311::writeWord(byte addr, uint16_t data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
@@ -56,7 +57,7 @@ void max7318::writeWord(byte addr, uint16_t data){
 	}
 }
 
-uint16_t max7318::readAddress(byte addr){
+uint16_t max7311::readAddress(byte addr){
 	byte low_byte = 0;
 	byte high_byte = 0;
 	if (!_error){
@@ -72,7 +73,7 @@ uint16_t max7318::readAddress(byte addr){
 
 
 
-void max7318::gpioPinMode(bool mode){
+void max7311::gpioPinMode(bool mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
 		writeWord(GPIO,_gpioDirection);
@@ -84,26 +85,26 @@ void max7318::gpioPinMode(bool mode){
 }
 
 
-void max7318::gpioPort(uint16_t value){
+void max7311::gpioPort(uint16_t value){
 	_gpioState = value;
 	writeWord(GPIO,_gpioState);
 }
 
-void max7318::gpioPort(byte lowByte, byte highByte){
+void max7311::gpioPort(byte lowByte, byte highByte){
 	_gpioState = byte2word(highByte,lowByte);
 	writeWord(GPIO,_gpioState);
 }
 
 
-uint16_t max7318::readGpioPort(){
+uint16_t max7311::readGpioPort(){
 	return readAddress(GPIO);
 }
 
-uint16_t max7318::readGpioPortFast(){
+uint16_t max7311::readGpioPortFast(){
 	return _gpioState;
 }
 
-int max7318::gpioDigitalReadFast(uint8_t pin){
+int max7311::gpioDigitalReadFast(uint8_t pin){
 	if (pin < 15){//0...15
 		int temp = bitRead(_gpioState,pin);
 		return temp;
@@ -112,7 +113,7 @@ int max7318::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void max7318::gpioPinMode(uint8_t pin, bool mode){
+void max7311::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 15){//0...15
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
@@ -124,7 +125,7 @@ void max7318::gpioPinMode(uint8_t pin, bool mode){
 }
 
 
-void max7318::gpioDigitalWrite(uint8_t pin, bool value){
+void max7311::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 15){//0...15
 		if (value){
 			bitSet(_gpioState,pin);
@@ -136,12 +137,12 @@ void max7318::gpioDigitalWrite(uint8_t pin, bool value){
 }
 
 
-int max7318::gpioDigitalRead(uint8_t pin){
+int max7311::gpioDigitalRead(uint8_t pin){
 	if (pin < 15) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
-unsigned int max7318::gpioRegisterRead(byte reg){
+unsigned int max7311::gpioRegisterRead(byte reg){
   unsigned int data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
@@ -154,6 +155,6 @@ unsigned int max7318::gpioRegisterRead(byte reg){
 }
 
 
-void max7318::gpioRegisterWrite(byte reg,byte data){
+void max7311::gpioRegisterWrite(byte reg,byte data){
 	writeWord(reg,data);
 }

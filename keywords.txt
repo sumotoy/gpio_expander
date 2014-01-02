@@ -15,6 +15,10 @@ mcp23018	KEYWORD1
 mcp23016	KEYWORD1
 pcf8574p	KEYWORD1
 pcf8574ap	KEYWORD1
+pcf8575	KEYWORD1
+pca9555	KEYWORD1
+max7318 KEYWORD1
+max7311	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
