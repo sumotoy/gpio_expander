@@ -23,8 +23,10 @@ Here's a list of the GPIO's chip managed:<br>
 - <b>pcf8574a</b> ---- NTX --------- 8  ------ I2C ------- INT/same as 8574 with different addressing
 - <b>pcf8575</b>------- NTX -------- 16  ------ I2C ------- INT
 - <b>pca9698</b> ------ NTX -------- 40  ------ I2C ------- INT/64 address
+- <b>pca9555</b> ------ NTX -------- 16  ------ I2C ------- INT/64 address
+- <b>tca9555</b> --------- TI --------- 16  ------ I2C ------- INT/64 address
 - <b>max7311</b> ------ MAXIM ----- 16  ------ I2C ------- INT
-- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection
+- <b>max7318</b> ------ MAXIM ----- 16  ------ I2C ------- INT/Hot insertion protection/64 addressing
 - <b>max7301</b> ------ MAXIM ----- 20/28 -- SPI ------- 
 - <b>max6957</b> ------ MAXIM ----- 20/28 -- SPI ------- 
 
