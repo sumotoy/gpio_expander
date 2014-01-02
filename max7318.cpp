@@ -4,46 +4,40 @@
 
 #include <Arduino.h>
 
-#include "mcp23017.h"
+#include "max7318.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
 
 
-mcp23017::mcp23017(const uint8_t adrs){
-	if (adrs >= 0x20 && adrs <= 0x27){//HAEN works between 0x20...0x27
+max7318::max7318(const uint8_t adrs){
+	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
+		_error = false;
+	} else if (adrs >= 0x28 && adrs <= 0xDE){//advanced addressing
+		//todo
 		_error = false;
 	} else {
 		_error = true;
 	}
 	//setup register values for this chip
-	IOCON = 	0x0A;
-	IODIR = 	0x00;
-	GPPU = 		0x0C;
-	GPIO = 		0x12;
-	GPINTEN = 	0x04;
-	IPOL = 		0x02;
-	DEFVAL = 	0x06;
-	INTF = 		0x0E;
-	INTCAP = 	0x10;
-	OLAT = 		0x14;
-	INTCON = 	0x08;
+	IODIR = 	0x06;//Configuration Registers (0x06..0x07)
+	GPPU = 		0x02;//Output Port Registers (0x02..0x03)
+	GPIO = 		0x00;//Input Port Registers (0x00..0x01)
+	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)(
 }
 
 
-void mcp23017::begin(bool protocolInitOverride) {
+void max7318::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){
 		Wire.begin();
 	}
 	delay(100);
-	writeByte(IOCON,0b00100000);//read datasheet for details!
 	_gpioDirection = 0xFFFF;//all in
 	_gpioState = 0x0000;//all low 
 }
 
 
-
-void mcp23017::writeByte(byte addr, byte data){
+void max7318::writeByte(byte addr, byte data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
@@ -52,17 +46,17 @@ void mcp23017::writeByte(byte addr, byte data){
 	}
 }
 
-void mcp23017::writeWord(byte addr, uint16_t data){
+void max7318::writeWord(byte addr, uint16_t data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
 		Wire.write(word2lowByte(data));
 		Wire.write(word2highByte(data));
 		Wire.endTransmission();
-	}	
+	}
 }
 
-uint16_t mcp23017::readAddress(byte addr){
+uint16_t max7318::readAddress(byte addr){
 	byte low_byte = 0;
 	byte high_byte = 0;
 	if (!_error){
@@ -70,45 +64,45 @@ uint16_t mcp23017::readAddress(byte addr){
 		Wire.write(addr);//witch register?
 		Wire.endTransmission();
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)2);
-		low_byte = Wire.read();
-		high_byte = Wire.read();
-	}
+		byte low_byte = Wire.read();
+		byte high_byte = Wire.read();
+	}	
 	return byte2word(high_byte,low_byte);
 }
 
 
 
-void mcp23017::gpioPinMode(bool mode){
+void max7318::gpioPinMode(bool mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
 	} else {
 		_gpioDirection = 0x0000;
+		_gpioState = 0x0000;
 	}
-	_gpioState = 0x0000;//reset this var in that case
 	writeWord(IODIR,_gpioDirection);
 }
 
 
-void mcp23017::gpioPort(uint16_t value){
+void max7318::gpioPort(uint16_t value){
 	_gpioState = value;
 	writeWord(GPIO,_gpioState);
 }
 
-void mcp23017::gpioPort(byte lowByte, byte highByte){
+void max7318::gpioPort(byte lowByte, byte highByte){
 	_gpioState = byte2word(highByte,lowByte);
 	writeWord(GPIO,_gpioState);
 }
 
 
-uint16_t mcp23017::readGpioPort(){
+uint16_t max7318::readGpioPort(){
 	return readAddress(GPIO);
 }
 
-uint16_t mcp23017::readGpioPortFast(){
+uint16_t max7318::readGpioPortFast(){
 	return _gpioState;
 }
 
-int mcp23017::gpioDigitalReadFast(uint8_t pin){
+int max7318::gpioDigitalReadFast(uint8_t pin){
 	if (pin < 15){//0...15
 		int temp = bitRead(_gpioState,pin);
 		return temp;
@@ -117,7 +111,7 @@ int mcp23017::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23017::gpioPinMode(uint8_t pin, bool mode){
+void max7318::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 15){//0...15
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
@@ -129,7 +123,7 @@ void mcp23017::gpioPinMode(uint8_t pin, bool mode){
 }
 
 
-void mcp23017::gpioDigitalWrite(uint8_t pin, bool value){
+void max7318::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 15){//0...15
 		if (value){
 			bitSet(_gpioState,pin);
@@ -141,12 +135,12 @@ void mcp23017::gpioDigitalWrite(uint8_t pin, bool value){
 }
 
 
-int mcp23017::gpioDigitalRead(uint8_t pin){
+int max7318::gpioDigitalRead(uint8_t pin){
 	if (pin < 15) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
-unsigned int mcp23017::gpioRegisterRead(byte reg){
+unsigned int max7318::gpioRegisterRead(byte reg){
   unsigned int data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
@@ -159,18 +153,6 @@ unsigned int mcp23017::gpioRegisterRead(byte reg){
 }
 
 
-void mcp23017::gpioRegisterWrite(byte reg,byte data){
+void max7318::gpioRegisterWrite(byte reg,byte data){
 	writeWord(reg,data);
 }
-
-
-void mcp23017::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFFFF;
-	} else {
-		_gpioState = 0x0000;
-	}
-	writeWord(GPPU, _gpioState);
-}
-
-

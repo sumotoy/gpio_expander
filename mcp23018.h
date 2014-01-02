@@ -19,13 +19,17 @@ mcp23018		Microchip		16			I2C					INT
 mcp23016		Microchip		16			I2C					INT
 pcf8574			NTX				8			I2C					INT
 pcf8574ap		NTX				8			I2C					INT
+max7318			MAXIM			16			I2C					INT/Hot Insert Protection/64 addresses
+TCA9555			TI			    16			I2C					INT/64 addresses/(uses same driver as max7318/pca9555)
+PCA9555			NTX			    16			I2C					INT/64 addresses/(uses same driver as max7318/tca9555)
 --------------------------------------------------------------------------------------
-mcp23018 Driver
-version 0.5b2
+MCP23018 Driver
+version 0.5b3
 --------------------------------------------------------------------------------------
 Version history:
 0.5b1: first release, just coded and never tested
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
+0.5b3: added some drivers
 --------------------------------------------------------------------------------------
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 --------------------------------------------------------------------------------------
@@ -104,5 +108,6 @@ private:
 	uint8_t 		_adrs;
 	uint16_t		_gpioDirection;
 	uint16_t		_gpioState;
+	bool			_error;
 };
 #endif

@@ -12,8 +12,9 @@
 mcp23016::mcp23016(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//HAEN works between 0x20...0x27
 		_adrs = adrs;
+		_error = false;
 	} else {
-		_adrs = 0x20;
+		_error = true;
 	}
 	//setup register values for this chip
 	IOCON = 	0x0A;
@@ -26,7 +27,7 @@ mcp23016::mcp23016(const uint8_t adrs){
 
 
 void mcp23016::begin(bool protocolInitOverride) {
-	if (!protocolInitOverride){
+	if (!protocolInitOverride && !_error){
 		Wire.begin();
 	}	
 	delay(100);
@@ -38,27 +39,35 @@ void mcp23016::begin(bool protocolInitOverride) {
 
 
 void mcp23016::writeByte(byte addr, byte data){
-	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
-	Wire.write(data);
-	Wire.endTransmission();
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(data);
+		Wire.endTransmission();
+	}
 }
 
 void mcp23016::writeWord(byte addr, uint16_t data){
-	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
-	Wire.write(word2lowByte(data));
-	Wire.write(word2highByte(data));
-	Wire.endTransmission();
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(word2lowByte(data));
+		Wire.write(word2highByte(data));
+		Wire.endTransmission();
+	}
 }
 
 uint16_t mcp23016::readAddress(byte addr){
-	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
-	Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_adrs,(uint8_t)2);
-	byte low_byte = Wire.read();
-	byte high_byte = Wire.read();
+	byte low_byte = 0;
+	byte high_byte = 0;
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)_adrs,(uint8_t)2);
+		low_byte = Wire.read();
+		high_byte = Wire.read();
+	}
 	return byte2word(high_byte,low_byte);
 }
 
@@ -134,11 +143,13 @@ int mcp23016::gpioDigitalRead(uint8_t pin){
 
 unsigned int mcp23016::gpioRegisterRead(byte reg){
   unsigned int data = 0;
-	Wire.beginTransmission(_adrs);
-	Wire.write(reg);
-	Wire.endTransmission();
-	Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
-	data = Wire.read();
+    if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(reg);
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
+		data = Wire.read();
+	}
   return data;
 }
 

@@ -13,8 +13,9 @@ mcp23008::mcp23008(const uint8_t adrs){
 
 	if (adrs >= 0x20 && adrs <= 0x27){// 0x20...0x27
 		_adrs = adrs;
+		_error = false;
 	} else {
-		_adrs = 0;
+		_error = true;
 	}
 	//setup register values for this chip
 	IOCON = 	0x05;
@@ -32,7 +33,7 @@ mcp23008::mcp23008(const uint8_t adrs){
 
 
 void mcp23008::begin(bool protocolInitOverride) {
-	if (!protocolInitOverride){
+	if (!protocolInitOverride && !_error){
 		Wire.begin();
 	}	
 
@@ -45,20 +46,25 @@ void mcp23008::begin(bool protocolInitOverride) {
 
 
 void mcp23008::writeByte(byte addr, byte data){
-	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
-	Wire.write(data);
-	Wire.endTransmission();
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(data);
+		Wire.endTransmission();
+	}
 }
 
 
 
 uint8_t mcp23008::readAddress(byte addr){
-	Wire.beginTransmission(_adrs);
-	Wire.write(addr);
-	Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
-	byte low_byte = Wire.read();
+	byte low_byte = 0;
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
+		low_byte = Wire.read();
+	}
 	return low_byte;
 }
 
@@ -129,11 +135,13 @@ int mcp23008::gpioDigitalRead(uint8_t pin){
 
 unsigned int mcp23008::gpioRegisterRead(byte reg){
   unsigned int data = 0;
-	Wire.beginTransmission(_adrs);
-	Wire.write(reg);
-	Wire.endTransmission();
-	Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
-	data = Wire.read();
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(reg);
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
+		data = Wire.read();
+	}
   return data;
 }
 
