@@ -52,6 +52,11 @@ void max7318::writeWord(byte addr, uint16_t data){
 		Wire.write(addr);//witch register?
 		Wire.write(word2lowByte(data));
 		Wire.write(word2highByte(data));
+			/*
+			//alternative to check
+			Wire.write(data & 0xff); // Send lo byte
+			Wire.write(data >> 8); // Send hi byte
+			*/
 		Wire.endTransmission();
 	}
 }

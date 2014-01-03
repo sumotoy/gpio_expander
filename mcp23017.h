@@ -1,41 +1,44 @@
 /*
-                               _                
  ___  _   _  _ __ ___    ___  | |_  ___   _   _ 
 / __|| | | || '_ ` _ \  / _ \ | __|/ _ \ | | | |
 \__ \| |_| || | | | | || (_) || |_| (_) || |_| |
 |___/ \__,_||_| |_| |_| \___/  \__|\___/  \__, |
                                           |___/ 
-Universal GPIO library for Arduinos and Teensy 2/3/3.x
---------------------------------------------------------------------------------------
-An attempt to create an universal library that works with many common GPIO chips:
+										  
+	gpio_expander - An attemp to create a fast and universal library for drive many GPIO chips
+	
 model:			company:		pins:		protocol:		Special Features:
---------------------------------------------------------------------------------------
-mcp23s17		Microchip		16			SPI					HAEN/INT
-mcp23017		Microchip		16			I2C					INT
-mcp2308			Microchip		8			I2C					INT
-mcp23s08		Microchip		8			SPI					HAEN/INT
-mcp23s18		Microchip		16			SPI					HAEN/INT
-mcp23018		Microchip		16			I2C					INT
-mcp23016		Microchip		16			I2C					INT
-pcf8574			NTX				8			I2C					INT
-pcf8574ap		NTX				8			I2C					INT
-max7318			MAXIM			16			I2C					INT/Hot Insert Protection/64 addresses
-TCA9555			TI			    16			I2C					INT/64 addresses/(uses same driver as max7318/pca9555)
-PCA9555			NTX			    16			I2C					INT/64 addresses/(uses same driver as max7318/tca9555)
---------------------------------------------------------------------------------------
-MCP23017 Driver
-version 0.5b3
---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+mcp23017		Microchip		 16			I2C					INT
+---------------------------------------------------------------------------------------------------------------------
 Version history:
 0.5b1: first release, just coded and never tested
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
 0.5b3: added some drivers
---------------------------------------------------------------------------------------
-coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
+---------------------------------------------------------------------------------------------------------------------
+
+    gpio_expander Library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    gpio_expander Library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
+	
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	Version:0.5b3
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
-/* ------------------------------ MCP23S17 WIRING ------------------------------------
+/* ------------------------------ MCP23017 WIRING ------------------------------------
 
 Basic Address:  00100 A2 A1 A0 (from 0x20 to 0x27)
 A2,A1,A0 tied to ground = 0x20
