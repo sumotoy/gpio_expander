@@ -35,7 +35,9 @@
 #include <inttypes.h>
 #include <Arduino.h>
 
-
+#if defined(__MK20DX128__) || defined(__MK20DX128__)//Teensy 3.0 or 3.1
+	#define __FASTWRITE
+#endif
 class gpio_expander {
 
 public:

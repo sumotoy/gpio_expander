@@ -171,7 +171,7 @@ void mcp23s18::gpioRegisterWrite(byte reg,byte data){
 }
 
 void mcp23s18::startSend(bool mode){
-#if defined(__FASTSPI)
+#if defined(__FASTWRITE)
 	digitalWriteFast(_cs, LOW);
 #else
 	digitalWrite(_cs, LOW);
@@ -184,7 +184,7 @@ void mcp23s18::startSend(bool mode){
 }
 
 void mcp23s18::endSend(){
-#if defined(__FASTSPI)
+#if defined(__FASTWRITE)
 	digitalWriteFast(_cs, HIGH);
 #else
 	digitalWrite(_cs, HIGH);
