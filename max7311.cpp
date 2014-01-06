@@ -70,8 +70,8 @@ uint16_t max7311::readAddress(byte addr){
 		Wire.write(addr);//witch register?
 		Wire.endTransmission();
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)2);
-		byte low_byte = Wire.read();
-		byte high_byte = Wire.read();
+		low_byte = Wire.read();
+		high_byte = Wire.read();
 	}	
 	return byte2word(high_byte,low_byte);
 }
