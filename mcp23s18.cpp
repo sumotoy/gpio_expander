@@ -7,9 +7,15 @@
 #include "mcp23s18.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
+mcp23s18::mcp23s18(){
 
+}
 
 mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs){
+	postSetup(csPin,haenAdrs);
+}
+
+void mcp23s18::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
 	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;
@@ -33,7 +39,6 @@ mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs){
 	OLAT = 		0x0A;
 	INTCON = 	0x04;
 }
-
 
 void mcp23s18::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){

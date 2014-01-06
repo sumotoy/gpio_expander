@@ -15,6 +15,7 @@ Version history:
 0.5b1: first release, just coded and never tested
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
 0.5b3: added some drivers
+0.5b4: ability to include library inside other libraries.
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.5b3
+	Version:0.5b4
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
@@ -73,10 +74,10 @@ class mcp23s17 : public gpio_expander
 
 public:
 	mcp23s17(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
-
+	mcp23s17();//For include inside other libraries
+	void 			postSetup(const uint8_t csPin,const uint8_t haenAdrs);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
-
-	
+    
 	void 			gpioPinMode(bool mode);						//set all pins to INPUT or OUTPUT
 	void 			gpioPinMode(uint8_t pin, bool mode);		//set a unique pin as IN(1) or OUT (0)
 	void 			gpioPort(uint16_t value);					//write data to all pins

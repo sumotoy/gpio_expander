@@ -7,9 +7,15 @@
 #include "max7311.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
+max7311::max7311(){
 
+}
 
 max7311::max7311(const uint8_t adrs){
+	postSetup(adrs);
+}
+
+void max7311::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
 		_error = false;
@@ -26,7 +32,6 @@ max7311::max7311(const uint8_t adrs){
 	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)
 	GPTIM =     0x08;//Timeout register (bit 0)
 }
-
 
 void max7311::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){

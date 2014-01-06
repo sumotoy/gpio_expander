@@ -7,10 +7,15 @@
 #include "mcp23008.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
+mcp23008::mcp23008(){
 
+}
 
 mcp23008::mcp23008(const uint8_t adrs){
+	postSetup(adrs);
+}
 
+void mcp23008::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){// 0x20...0x27
 		_adrs = adrs;
 		_error = false;
@@ -30,7 +35,6 @@ mcp23008::mcp23008(const uint8_t adrs){
 	OLAT = 		0x0A;
 	INTCON = 	0x04;
 }
-
 
 void mcp23008::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){

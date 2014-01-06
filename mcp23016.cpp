@@ -7,9 +7,15 @@
 #include "mcp23016.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
+mcp23016::mcp23016(){
 
+}
 
 mcp23016::mcp23016(const uint8_t adrs){
+	postSetup(adrs);
+}
+
+void mcp23016::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//HAEN works between 0x20...0x27
 		_adrs = adrs;
 		_error = false;
@@ -24,7 +30,6 @@ mcp23016::mcp23016(const uint8_t adrs){
 	INTCAP = 	0x08;
 	OLAT = 		0x02;
 }
-
 
 void mcp23016::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){

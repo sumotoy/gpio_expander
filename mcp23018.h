@@ -15,6 +15,7 @@ Version history:
 0.5b1: first release, just coded and never tested
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
 0.5b3: added some drivers
+0.5b4: ability to include library inside other libraries.
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.5b3
+	Version:0.5b4
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
@@ -72,7 +73,8 @@ class mcp23018 : public gpio_expander
 
 public:
 	mcp23018(const uint8_t adrs);
-
+	mcp23018();;//used with other libraries only
+	void			postSetup(const uint8_t adrs);;//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	

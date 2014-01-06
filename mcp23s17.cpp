@@ -7,9 +7,16 @@
 #include "mcp23s17.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
+mcp23s17::mcp23s17(){
+}
 
 
 mcp23s17::mcp23s17(const uint8_t csPin,const uint8_t haenAdrs){
+	postSetup(csPin,haenAdrs);
+}
+
+
+void mcp23s17::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
 	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;
@@ -38,7 +45,7 @@ mcp23s17::mcp23s17(const uint8_t csPin,const uint8_t haenAdrs){
 void mcp23s17::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
-		SPI.setClockDivider(SPI_CLOCK_DIV4); 
+		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 		SPI.setBitOrder(MSBFIRST);
 		SPI.setDataMode(SPI_MODE0);
 	}	

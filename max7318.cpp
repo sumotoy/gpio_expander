@@ -7,9 +7,14 @@
 #include "max7318.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
-
+max7318::max7318(){
+}
 
 max7318::max7318(const uint8_t adrs){
+	postSetup(adrs);
+}
+
+void max7318::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
 		_error = false;
@@ -25,7 +30,6 @@ max7318::max7318(const uint8_t adrs){
 	GPIO = 		0x00;//Input Port Registers (0x00..0x01)
 	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)(
 }
-
 
 void max7318::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){

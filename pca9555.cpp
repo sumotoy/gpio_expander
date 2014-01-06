@@ -7,9 +7,15 @@
 #include "pca9555.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
+pca9555::pca9555(){
 
+}
 
 pca9555::pca9555(const uint8_t adrs){
+	postSetup(adrs);
+}
+
+void pca9555::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
 		_error = false;
@@ -25,7 +31,6 @@ pca9555::pca9555(const uint8_t adrs){
 	GPIO = 		0x00;//Input Port Registers (0x00..0x01)
 	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)(
 }
-
 
 void pca9555::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){
