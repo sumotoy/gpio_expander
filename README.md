@@ -133,9 +133,9 @@ Why create an unified library? It's better create single libraries for chip fami
 ```
  then you need an instance:
  
- ```
+```
  mcp23017 gpio(address);//instance
- ```
+```
  where the address it's specific to the chip (read chip.h file)
  
  From below the commands are the same for all chip with some exceptions:
@@ -144,7 +144,7 @@ Why create an unified library? It's better create single libraries for chip fami
  
  Commands are:
 
- ```
+```
  gpio.begin();//gpio.begin(1); will not init the protocol (useful when multiple chip are used or you want to manually init it
  
  gpio.gpioPinMode(INPUT or OUTPUT);//set all pin accordly
@@ -167,7 +167,7 @@ Another example: How to include in another library?
 Here's how to inlude and use this library inside an existing one.
 In the .h file of your existing library add this lines just after the aruino.h include or library protection declaration:
 
- ```
+```
 #ifndef _YOURLIB_H_
 #define _YOURLIB_H_
 
@@ -179,10 +179,11 @@ In the .h file of your existing library add this lines just after the aruino.h i
 #include <../SPI/SPI.h>//this chip needs SPI
 #include <../gpio_expander/mcp23s17.h>
 //here ends
- ```
+```
+
  Now you have to provide an instance! Go to the private section of your library .h file and add to existings:
  
-  ```
+```
  private:
     bla
     bla
@@ -191,11 +192,13 @@ In the .h file of your existing library add this lines just after the aruino.h i
 	   uint8_t 		_adrs;//needed for this chip (if you using HAEN)
 
 	   mcp23s17		mygpio;//here the instance
-	 ```
+```
+
 	 As you noticed I have included also the _cs pin var and _adrs var needed for the chip I choose for demo.
 	 Now open the .cpp file of your library and add these lines to your initialization function:
 	 
-  ```
+	 
+```
 	 void myLibrary::begin(bla, bla){
 	     bla
 	     bla
@@ -206,9 +209,10 @@ In the .h file of your existing library add this lines just after the aruino.h i
 	      mygpio.gpioPort(0xFFFF);
 	      etc...
 	 }
-  ```
+```
   
-  Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!
+  Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
+  
 version <b>0.5b4</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
