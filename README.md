@@ -135,6 +135,8 @@ Why create an unified library? It's better create single libraries for chip fami
  
 ```
  mcp23017 gpio(address);//instance
+ // NOTE: If you need to include library in other libraries you can use mcp23017 gpio(); (empty address)
+ // then call postSetup!!
 ```
  where the address it's specific to the chip (read chip.h file)
  
@@ -145,11 +147,12 @@ Why create an unified library? It's better create single libraries for chip fami
  Commands are:
 
 ```
+ gpio.postSetup(depends of chip);//Useful when you want include in other libraries
  gpio.begin();//gpio.begin(1); will not init the protocol (useful when multiple chip are used or you want to manually init it
  
- gpio.gpioPinMode(INPUT or OUTPUT);//set all pin accordly
+ gpio.gpioPinMode(INPUT or OUTPUT or data);//set all pin accordly
  gpio.gpioPinMode(pin,mode);//set an individual pin as INPUT or OUTPUT
- gpio.port(data);//data=8..xx bits, depends of chip. set all pins at once
+ gpio.port(data or HIGH or LOW);//data=8..xx bits, depends of chip. set all pins at once
  gpio.port(low byte,high byte);//useful for 16 bit GPIOs that have 2 ports of 8 bit
  gpio.readGpioPort();//read the state of all pins, it returns 8...xx bits depending of chip
  gpio.readGpioPortFast();//experimental. Read the state of the library buffer instead of the chip.
@@ -157,9 +160,10 @@ Why create an unified library? It's better create single libraries for chip fami
  gpio.gpioDigitalRead(pin);//read the state of one pin
  gpio.gpioDigitalReadFast(pin);//experimental. Read the state of a pin from the library buffer
  gpio.gpioRegisterRead(register);//not available to all chip, read the specific register
- gpio.gpioRegisterWrite(register,data);//write directly a chip register
- gpio.writeByte(register,byte);
- gpio.writeWord(register,word);
+ gpio.gpioRegisterWriteByte(register,data);//write byte directly in chip register
+ gpio.gpioRegisterWriteWord(register,data);//write word directly in chip register(not 8 bit chip)
+ gpio.portPullup(HIGH or LOW or data);//Set pullup on input pin (not all chip!)
+
 ```
  
 Another example: How to include in another library?
@@ -203,7 +207,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
 	     bla
 	     bla
 	     
-	     	mygpio.postSetup(_cs,_adrs);//you should set these 2 vars before!
+	      mygpio.postSetup(_cs,_adrs);//you should set these 2 vars before!
 	      mygpio.begin();//put true if you want to init SPI (or I2C, depends of chip) manually!
 	      mygpio.gpioPinMode(OUTPUT);
 	      mygpio.gpioPort(0xFFFF);
@@ -213,7 +217,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
-version <b>0.5b4</b> - beta release - only some driver released and partially tested!!!<br><br>
+version <b>0.5b7</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
