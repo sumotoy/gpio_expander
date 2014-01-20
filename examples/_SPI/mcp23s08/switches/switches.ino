@@ -31,11 +31,11 @@ void setup()
   Serial.println("start");
   
   mcp.begin();
-  mcp.gpioRegisterWrite(mcp.IOCON,0b00101000);//set interrupt on GPIO and other parameters (see datasheet)
+  mcp.gpioRegisterWriteByte(mcp.IOCON,0b00101000);//set interrupt on GPIO and other parameters (see datasheet)
   mcp.gpioPinMode(INPUT);// Set all pins to be inputs
-  mcp.gpioRegisterWrite(mcp.GPPU,0xFF);// pull-up resistor for switch
-  mcp.gpioRegisterWrite(mcp.IPOL,0xFF);// invert polarity
-  mcp.gpioRegisterWrite(mcp.GPINTEN,0xFF);// enable all interrupt
+  mcp.gpioRegisterWriteByte(mcp.GPPU,0xFF);// pull-up resistor for switch
+  mcp.gpioRegisterWriteByte(mcp.IPOL,0xFF);// invert polarity
+  mcp.gpioRegisterWriteByte(mcp.GPINTEN,0xFF);// enable all interrupt
   mcp.gpioRegisterRead(mcp.INTCAP);// read from interrupt capture ports to clear them
   //now prepare interrupt pin on processor
   pinMode (INTpin, INPUT);

@@ -18,7 +18,7 @@ mcp23s17::mcp23s17(const uint8_t csPin,const uint8_t haenAdrs){
 
 void mcp23s17::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
-	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
+	if (haenAdrs > 0x19 && haenAdrs < 0x28){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;
 		_useHaen = 1;
 	} else {
@@ -58,25 +58,12 @@ void mcp23s17::begin(bool protocolInitOverride) {
 		writeByte(IOCON,0b00100000);
 	}
 	_gpioDirection = 0xFFFF;//all in
-	_gpioState = 0x0000;//all low 
+	_gpioState = 0xFFFF;//all low 
 }
 
 
 
-void mcp23s17::writeByte(byte addr, byte data){
-	startSend(0);
-	SPI.transfer(addr);
-	SPI.transfer(data);
-	endSend();
-}
 
-void mcp23s17::writeWord(byte addr, uint16_t data){
-	startSend(0);
-	SPI.transfer(addr);
-	SPI.transfer(word2lowByte(data));
-	SPI.transfer(word2highByte(data));
-	endSend();
-}
 
 uint16_t mcp23s17::readAddress(byte addr){
 	byte low_byte = 0x00;
@@ -90,19 +77,38 @@ uint16_t mcp23s17::readAddress(byte addr){
 
 
 
-void mcp23s17::gpioPinMode(bool mode){
+void mcp23s17::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
+	} else {
+		_gpioDirection = mode;
 	}
 	writeWord(IODIR,_gpioDirection);
 }
 
+void mcp23s17::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
+	}
+}
+
 
 void mcp23s17::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -120,24 +126,15 @@ uint16_t mcp23s17::readGpioPortFast(){
 	return _gpioState;
 }
 
-int mcp23s17::gpioDigitalReadFast(uint8_t pin){
-	if (pin < 15){//0...15
-		int temp = bitRead(_gpioState,pin);
-		return temp;
+void mcp23s17::portPullup(uint16_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
 	} else {
-		return 0;
+		_gpioState = data;
 	}
-}
-
-void mcp23s17::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
-	}
+	writeWord(GPPU, _gpioState);
 }
 
 
@@ -158,6 +155,16 @@ int mcp23s17::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
+
+int mcp23s17::gpioDigitalReadFast(uint8_t pin){
+	if (pin < 15){//0...15
+		int temp = bitRead(_gpioState,pin);
+		return temp;
+	} else {
+		return 0;
+	}
+}
+
 unsigned int mcp23s17::gpioRegisterRead(byte reg){
   unsigned int data = 0;
     startSend(1);
@@ -167,9 +174,28 @@ unsigned int mcp23s17::gpioRegisterRead(byte reg){
   return data;
 }
 
+void mcp23s17::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
+}
 
-void mcp23s17::gpioRegisterWrite(byte reg,byte data){
-	writeWord(reg,data);
+void mcp23s17::gpioRegisterWriteWord(byte reg,word data){
+	writeWord(reg,(word)data);
+}
+
+/* ------------------------------ Low Level ----------------*/
+void mcp23s17::writeByte(byte addr, byte data){
+	startSend(0);
+	SPI.transfer(addr);
+	SPI.transfer(data);
+	endSend();
+}
+
+void mcp23s17::writeWord(byte addr, uint16_t data){
+	startSend(0);
+	SPI.transfer(addr);
+	SPI.transfer(word2lowByte(data));
+	SPI.transfer(word2highByte(data));
+	endSend();
 }
 
 void mcp23s17::startSend(bool mode){
@@ -194,11 +220,5 @@ void mcp23s17::endSend(){
 }
 
 
-void mcp23s17::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFFFF;
-	} else {
-		_gpioState = 0x0000;
-	}
-	writeWord(GPPU, _gpioState);
-}
+
+

@@ -41,24 +41,7 @@ void max7318::begin(bool protocolInitOverride) {
 }
 
 
-void max7318::writeByte(byte addr, byte data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(data);
-		Wire.endTransmission();
-	}
-}
 
-void max7318::writeWord(byte addr, uint16_t data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(word2lowByte(data));
-		Wire.write(word2highByte(data));
-		Wire.endTransmission();
-	}
-}
 
 uint16_t max7318::readAddress(byte addr){
 	byte low_byte = 0;
@@ -76,20 +59,37 @@ uint16_t max7318::readAddress(byte addr){
 
 
 
-void max7318::gpioPinMode(bool mode){
+void max7318::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-		writeWord(GPIO,_gpioDirection);
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
-		writeWord(GPPU,_gpioDirection);
+	} else {
+		_gpioDirection = mode;
+	}
+	writeWord(IODIR,_gpioDirection);
+}
+
+void max7318::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
 	}
 }
 
-
 void max7318::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -116,16 +116,7 @@ int max7318::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void max7318::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
-	}
-}
+
 
 
 void max7318::gpioDigitalWrite(uint8_t pin, bool value){
@@ -158,6 +149,30 @@ unsigned int max7318::gpioRegisterRead(byte reg){
 }
 
 
-void max7318::gpioRegisterWrite(byte reg,byte data){
-	writeWord(reg,data);
+void max7318::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
+}
+
+void max7318::gpioRegisterWriteWord(byte reg,word data){
+	writeWord(reg,(word)data);
+}
+
+/* ------------------------------ Low Level ----------------*/
+void max7318::writeByte(byte addr, byte data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(data);
+		Wire.endTransmission();
+	}
+}
+
+void max7318::writeWord(byte addr, uint16_t data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(word2lowByte(data));
+		Wire.write(word2highByte(data));
+		Wire.endTransmission();
+	}
 }

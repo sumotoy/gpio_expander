@@ -49,24 +49,6 @@ void mcp23017::begin(bool protocolInitOverride) {
 
 
 
-void mcp23017::writeByte(byte addr, byte data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(data);
-		Wire.endTransmission();
-	}
-}
-
-void mcp23017::writeWord(byte addr, uint16_t data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(word2lowByte(data));
-		Wire.write(word2highByte(data));
-		Wire.endTransmission();
-	}	
-}
 
 uint16_t mcp23017::readAddress(byte addr){
 	byte low_byte = 0;
@@ -84,19 +66,37 @@ uint16_t mcp23017::readAddress(byte addr){
 
 
 
-void mcp23017::gpioPinMode(bool mode){
+void mcp23017::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
+		_gpioState = 0x0000;
+	} else {
+		_gpioDirection = mode;
 	}
-	_gpioState = 0x0000;//reset this var in that case
 	writeWord(IODIR,_gpioDirection);
 }
 
+void mcp23017::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
+	}
+}
 
 void mcp23017::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -123,17 +123,17 @@ int mcp23017::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23017::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
-	}
-}
 
+void mcp23017::portPullup(uint16_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = data;
+	}
+	writeWord(GPPU, _gpioState);
+}
 
 void mcp23017::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 15){//0...15
@@ -165,18 +165,34 @@ unsigned int mcp23017::gpioRegisterRead(byte reg){
 }
 
 
-void mcp23017::gpioRegisterWrite(byte reg,byte data){
-	writeWord(reg,data);
+void mcp23017::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
 }
 
 
-void mcp23017::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFFFF;
-	} else {
-		_gpioState = 0x0000;
+void mcp23017::gpioRegisterWriteWord(byte reg,word data){
+	writeWord(reg,(word)data);
+}
+
+/* ------------------------------ Low Level ----------------*/
+
+void mcp23017::writeByte(byte addr, byte data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(data);
+		Wire.endTransmission();
 	}
-	writeWord(GPPU, _gpioState);
+}
+
+void mcp23017::writeWord(byte addr, uint16_t data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(word2lowByte(data));
+		Wire.write(word2highByte(data));
+		Wire.endTransmission();
+	}	
 }
 
 

@@ -61,20 +61,7 @@ void mcp23s18::begin(bool protocolInitOverride) {
 
 
 
-void mcp23s18::writeByte(byte addr, byte data){
-	startSend(0);
-	SPI.transfer(addr);
-	SPI.transfer(data);
-	endSend();
-}
 
-void mcp23s18::writeWord(byte addr, uint16_t data){
-	startSend(0);
-	SPI.transfer(addr);
-	SPI.transfer(word2lowByte(data));
-	SPI.transfer(word2highByte(data));
-	endSend();
-}
 
 uint16_t mcp23s18::readAddress(byte addr){
 	byte low_byte = 0x00;
@@ -88,19 +75,38 @@ uint16_t mcp23s18::readAddress(byte addr){
 
 
 
-void mcp23s18::gpioPinMode(bool mode){
+void mcp23s18::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
+	} else {
+		_gpioDirection = mode;
 	}
 	writeWord(IODIR,_gpioDirection);
 }
 
+void mcp23s18::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
+	}
+}
+
 
 void mcp23s18::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -127,16 +133,6 @@ int mcp23s18::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23s18::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
-	}
-}
 
 
 void mcp23s18::gpioDigitalWrite(uint8_t pin, bool value){
@@ -165,9 +161,41 @@ unsigned int mcp23s18::gpioRegisterRead(byte reg){
   return data;
 }
 
+void mcp23s18::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
+}
 
-void mcp23s18::gpioRegisterWrite(byte reg,byte data){
-	writeWord(reg,data);
+void mcp23s18::gpioRegisterWriteWord(byte reg,word data){
+	writeWord(reg,(word)data);
+}
+
+
+void mcp23s18::portPullup(uint16_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = data;
+	}
+	writeWord(GPPU, _gpioState);
+}
+
+/* ------------------------------ Low Level ----------------*/
+
+void mcp23s18::writeByte(byte addr, byte data){
+	startSend(0);
+	SPI.transfer(addr);
+	SPI.transfer(data);
+	endSend();
+}
+
+void mcp23s18::writeWord(byte addr, uint16_t data){
+	startSend(0);
+	SPI.transfer(addr);
+	SPI.transfer(word2lowByte(data));
+	SPI.transfer(word2highByte(data));
+	endSend();
 }
 
 void mcp23s18::startSend(bool mode){
@@ -191,11 +219,3 @@ void mcp23s18::endSend(){
 #endif
 }
 
-void mcp23s18::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFFFF;
-	} else {
-		_gpioState = 0x0000;
-	}
-	writeWord(GPPU, _gpioState);
-}

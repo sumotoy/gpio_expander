@@ -36,7 +36,8 @@ gpioDigitalWrite	KEYWORD2
 gpioDigitalRead	KEYWORD2
 gpioRegisterRead	KEYWORD2
 gpioDigitalReadFast	KEYWORD2
-gpioRegisterWrite	KEYWORD2
+gpioRegisterWriteByte	KEYWORD2
+gpioRegisterWriteWord	KEYWORD2
 portPullup	KEYWORD2
 
 #######################################

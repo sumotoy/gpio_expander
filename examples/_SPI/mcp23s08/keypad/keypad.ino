@@ -32,12 +32,12 @@ mcp23s08 mkeypad(CS_COMMON_PIN,MATRIX_ADRS);
 void setup() {                
   Serial.begin(38400);
   mkeypad.begin();
-  mkeypad.gpioRegisterWrite(mkeypad.IOCON,0b00101000);//chip configure,serial, HAEN, etc.
-  mkeypad.gpioRegisterWrite(mkeypad.GPPU,0b11110000);//pull up resistors on for col and off for row
-  mkeypad.gpioRegisterWrite(mkeypad.IODIR,0b00001111);//pin0..3(in) / 4...7(out)
-  mkeypad.gpioRegisterWrite(mkeypad.INTCON,0b00001111);//int on change control on pin 0..3
-  mkeypad.gpioRegisterWrite(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
-  mkeypad.gpioRegisterWrite(mkeypad.GPINTEN,0b00001111);//int on change enable on pin 0..3
+  mkeypad.gpioRegisterWriteByte(mkeypad.IOCON,0b00101000);//chip configure,serial, HAEN, etc.
+  mkeypad.gpioRegisterWriteByte(mkeypad.GPPU,0b11110000);//pull up resistors on for col and off for row
+  mkeypad.gpioRegisterWriteByte(mkeypad.IODIR,0b00001111);//pin0..3(in) / 4...7(out)
+  mkeypad.gpioRegisterWriteByte(mkeypad.INTCON,0b00001111);//int on change control on pin 0..3
+  mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
+  mkeypad.gpioRegisterWriteByte(mkeypad.GPINTEN,0b00001111);//int on change enable on pin 0..3
 
   mkeypad.gpioRegisterRead(mkeypad.INTCAP);//clear int register
   
@@ -89,33 +89,32 @@ byte handleKeypress(){
     row = mkeypad.gpioRegisterRead(mkeypad.INTCAP);
     // ...now identify the column
     //invert the direction of the pins IODIR
-    mkeypad.gpioRegisterWrite(mkeypad.IODIR,0b11110000);//pin0..3(out) / 4...7(in)
+    mkeypad.gpioRegisterWriteByte(mkeypad.IODIR,0b11110000);//pin0..3(out) / 4...7(in)
     //invert the other registers
-    mkeypad.gpioRegisterWrite(mkeypad.INTCON,0b11110000);//int on change control on pin 4..7
-    mkeypad.gpioRegisterWrite(mkeypad.DEFVAL,0b11110000);//default comparison value for pin 4..7
-    mkeypad.gpioRegisterWrite(mkeypad.GPINTEN,0b11110000);//int on change enable on pin 4..7
+    mkeypad.gpioRegisterWriteByte(mkeypad.INTCON,0b11110000);//int on change control on pin 4..7
+    mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b11110000);//default comparison value for pin 4..7
+    mkeypad.gpioRegisterWriteByte(mkeypad.GPINTEN,0b11110000);//int on change enable on pin 4..7
     //now read GPIO to get the column
     col = mkeypad.gpioRegisterRead(mkeypad.GPIO);
     // combine in OR the 2 register
     res = row|col;
     if (res == 0xF0) res = 0;
     // not ended, key it's still down and we have to put back everithing as it was
-    mkeypad.gpioRegisterWrite(mkeypad.IODIR,0b00001111);//pin0..3(in) / 4...7(out)
-    mkeypad.gpioRegisterWrite(mkeypad.INTCON,0b00001111);//int on change control on pin 0..3
-    mkeypad.gpioRegisterWrite(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
+    mkeypad.gpioRegisterWriteByte(mkeypad.IODIR,0b00001111);//pin0..3(in) / 4...7(out)
+    mkeypad.gpioRegisterWriteByte(mkeypad.INTCON,0b00001111);//int on change control on pin 0..3
+    mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
     // Cannot put back the int register since key it's still down!
     // so wait until key has been released
     while(mkeypad.gpioRegisterRead(mkeypad.GPIO) != 0x0F){
       delayMicroseconds(15);
     }
     //put back the interrupt register since now key has been released
-    mkeypad.gpioRegisterWrite(mkeypad.GPINTEN,0b00001111);//int on change enable on pin 0..3
+    mkeypad.gpioRegisterWriteByte(mkeypad.GPINTEN,0b00001111);//int on change enable on pin 0..3
     keyPressed = false;
     attachInterrupt(INTused, keypress, FALLING);
   }
   return res;
 }
-
 
 
 

@@ -61,13 +61,6 @@ void mcp23s08::begin(bool protocolInitOverride) {
 
 
 
-void mcp23s08::writeByte(byte addr, byte data){
-	startSend(0);
-	SPI.transfer(addr);
-	SPI.transfer(data);
-	endSend();
-}
-
 
 
 uint8_t mcp23s08::readAddress(byte addr){
@@ -81,19 +74,37 @@ uint8_t mcp23s08::readAddress(byte addr){
 
 
 
-void mcp23s08::gpioPinMode(bool mode){
+void mcp23s08::gpioPinMode(uint8_t mode){
 	if (mode == INPUT){
-		_gpioDirection = 0xFF;
+		_gpioDirection = 0xFFFF;
+	} else if (mode == OUTPUT){	
+		_gpioDirection = 0x0000;
+		_gpioState = 0x0000;
 	} else {
-		_gpioDirection = 0x00;
-		_gpioState = 0x00;
+		_gpioDirection = mode;
 	}
 	writeByte(IODIR,_gpioDirection);
 }
 
+void mcp23s08::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 8){//0...7
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeByte(IODIR,_gpioDirection);
+	}
+}
 
 void mcp23s08::gpioPort(uint8_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeByte(GPIO,_gpioState);
 }
 
@@ -115,16 +126,18 @@ int mcp23s08::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23s08::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 8){//0...7
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeByte(IODIR,_gpioDirection);
+void mcp23s08::portPullup(uint8_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = data;
 	}
+	writeByte(GPPU, _gpioState);
 }
+
+
 
 
 void mcp23s08::gpioDigitalWrite(uint8_t pin, bool value){
@@ -154,10 +167,11 @@ unsigned int mcp23s08::gpioRegisterRead(byte reg){
 }
 
 
-void mcp23s08::gpioRegisterWrite(byte reg,byte data){
-	writeByte(reg,data);
+void mcp23s08::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
 }
 
+/* ------------------------------ Low Level ----------------*/
 void mcp23s08::startSend(bool mode){
 #if defined(__FASTWRITE)
 	digitalWriteFast(_cs, LOW);
@@ -180,11 +194,11 @@ void mcp23s08::endSend(){
 }
 
 
-void mcp23s08::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFF;
-	} else {
-		_gpioState = 0x00;
-	}
-	writeByte(GPPU, _gpioState);
+void mcp23s08::writeByte(byte addr, byte data){
+	startSend(0);
+	SPI.transfer(addr);
+	SPI.transfer(data);
+	endSend();
 }
+
+

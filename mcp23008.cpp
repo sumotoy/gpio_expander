@@ -49,17 +49,6 @@ void mcp23008::begin(bool protocolInitOverride) {
 
 
 
-void mcp23008::writeByte(byte addr, byte data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);
-		Wire.write(data);
-		Wire.endTransmission();
-	}
-}
-
-
-
 uint8_t mcp23008::readAddress(byte addr){
 	byte low_byte = 0;
 	if (!_error){
@@ -74,19 +63,38 @@ uint8_t mcp23008::readAddress(byte addr){
 
 
 
-void mcp23008::gpioPinMode(bool mode){
+void mcp23008::gpioPinMode(uint8_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFF;
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x00;
 		_gpioState = 0x00;
+	} else {
+		_gpioDirection = mode;
 	}
 	writeByte(IODIR,_gpioDirection);
 }
 
+void mcp23008::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 8){//0...7
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeByte(IODIR,_gpioDirection);
+	}
+}
+
 
 void mcp23008::gpioPort(uint8_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFF;
+	} else if (value == LOW){	
+		_gpioState = 0x00;
+	} else {
+		_gpioState = value;
+	}
 	writeByte(GPIO,_gpioState);
 }
 
@@ -108,16 +116,17 @@ int mcp23008::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23008::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 8){//0...7
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeByte(IODIR,_gpioDirection);
+void mcp23008::portPullup(uint8_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFF;
+	} else if (data == LOW){	
+		_gpioState = 0x00;
+	} else {
+		_gpioState = data;
 	}
+	writeByte(GPPU, _gpioState);
 }
+
 
 
 void mcp23008::gpioDigitalWrite(uint8_t pin, bool value){
@@ -150,16 +159,18 @@ unsigned int mcp23008::gpioRegisterRead(byte reg){
 }
 
 
-void mcp23008::gpioRegisterWrite(byte reg,byte data){
-	writeByte(reg,data);
+void mcp23008::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
 }
 
-
-void mcp23008::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFF;
-	} else {
-		_gpioState = 0x00;
+/* ------------------------------ Low Level ----------------*/
+void mcp23008::writeByte(byte addr, byte data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(data);
+		Wire.endTransmission();
 	}
-	writeByte(GPPU, _gpioState);
 }
+
+

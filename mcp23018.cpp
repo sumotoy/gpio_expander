@@ -49,24 +49,7 @@ void mcp23018::begin(bool protocolInitOverride) {
 
 
 
-void mcp23018::writeByte(byte addr, byte data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);
-		Wire.write(data);
-		Wire.endTransmission();
-	}
-}
 
-void mcp23018::writeWord(byte addr, uint16_t data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);
-		Wire.write(word2lowByte(data));
-		Wire.write(word2highByte(data));
-		Wire.endTransmission();
-	}
-}
 
 uint16_t mcp23018::readAddress(byte addr){
 	byte low_byte = 0;
@@ -84,19 +67,37 @@ uint16_t mcp23018::readAddress(byte addr){
 
 
 
-void mcp23018::gpioPinMode(bool mode){
+void mcp23018::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
+	} else {
+		_gpioDirection = mode;
 	}
 	writeWord(IODIR,_gpioDirection);
 }
 
+void mcp23018::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
+	}
+}
 
 void mcp23018::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -123,16 +124,17 @@ int mcp23018::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void mcp23018::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
+void mcp23018::portPullup(uint16_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = data;
 	}
+	writeWord(GPPU, _gpioState);
 }
+
 
 
 void mcp23018::gpioDigitalWrite(uint8_t pin, bool value){
@@ -165,15 +167,31 @@ unsigned int mcp23018::gpioRegisterRead(byte reg){
 }
 
 
-void mcp23018::gpioRegisterWrite(byte reg,byte data){
+void mcp23018::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,data);
+}
+
+void mcp23018::gpioRegisterWriteWord(byte reg,word data){
 	writeWord(reg,data);
 }
 
-void mcp23018::portPullup(bool data) {
-	if (data){
-		_gpioState = 0xFF;
-	} else {
-		_gpioState = 0x00;
+/* ------------------------------ Low Level ----------------*/
+
+void mcp23018::writeByte(byte addr, byte data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(data);
+		Wire.endTransmission();
 	}
-	writeByte(GPPU, _gpioState);
+}
+
+void mcp23018::writeWord(byte addr, uint16_t data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);
+		Wire.write(word2lowByte(data));
+		Wire.write(word2highByte(data));
+		Wire.endTransmission();
+	}
 }

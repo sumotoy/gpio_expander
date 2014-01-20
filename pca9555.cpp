@@ -42,24 +42,7 @@ void pca9555::begin(bool protocolInitOverride) {
 }
 
 
-void pca9555::writeByte(byte addr, byte data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(data);
-		Wire.endTransmission();
-	}
-}
 
-void pca9555::writeWord(byte addr, uint16_t data){
-	if (!_error){
-		Wire.beginTransmission(_adrs);
-		Wire.write(addr);//witch register?
-		Wire.write(word2lowByte(data));
-		Wire.write(word2highByte(data));
-		Wire.endTransmission();
-	}
-}
 
 uint16_t pca9555::readAddress(byte addr){
 	byte low_byte = 0;
@@ -77,20 +60,37 @@ uint16_t pca9555::readAddress(byte addr){
 
 
 
-void pca9555::gpioPinMode(bool mode){
+void pca9555::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
-		writeWord(GPIO,_gpioDirection);
-	} else {
+	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
-		writeWord(GPPU,_gpioDirection);
+	} else {
+		_gpioDirection = mode;
+	}
+	writeWord(IODIR,_gpioDirection);
+}
+
+void pca9555::gpioPinMode(uint8_t pin, bool mode){
+	if (pin < 15){//0...15
+		if (mode == INPUT){
+			bitSet(_gpioDirection,pin);
+		} else {
+			bitClear(_gpioDirection,pin);
+		}
+		writeWord(IODIR,_gpioDirection);
 	}
 }
 
-
 void pca9555::gpioPort(uint16_t value){
-	_gpioState = value;
+	if (value == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (value == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = value;
+	}
 	writeWord(GPIO,_gpioState);
 }
 
@@ -117,16 +117,7 @@ int pca9555::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-void pca9555::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		writeWord(IODIR,_gpioDirection);
-	}
-}
+
 
 
 void pca9555::gpioDigitalWrite(uint8_t pin, bool value){
@@ -159,6 +150,30 @@ unsigned int pca9555::gpioRegisterRead(byte reg){
 }
 
 
-void pca9555::gpioRegisterWrite(byte reg,byte data){
-	writeWord(reg,data);
+void pca9555::gpioRegisterWriteByte(byte reg,byte data){
+	writeByte(reg,(byte)data);
+}
+
+void pca9555::gpioRegisterWriteWord(byte reg,word data){
+	writeWord(reg,(word)data);
+}
+
+/* ------------------------------ Low Level ----------------*/
+void pca9555::writeByte(byte addr, byte data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(data);
+		Wire.endTransmission();
+	}
+}
+
+void pca9555::writeWord(byte addr, uint16_t data){
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(addr);//witch register?
+		Wire.write(word2lowByte(data));
+		Wire.write(word2highByte(data));
+		Wire.endTransmission();
+	}
 }

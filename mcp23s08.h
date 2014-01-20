@@ -16,6 +16,7 @@ Version history:
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
 0.5b3: added some drivers
 0.5b4: ability to include library inside other libraries.
+0.5b7: Changed functionalities of some function.
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.5b4
+	Version:0.5b7
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
@@ -74,7 +75,7 @@ public:
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	
-	void 			gpioPinMode(bool mode);						//set all pins to INPUT or OUTPUT
+	void 			gpioPinMode(uint8_t mode);						//set all pins to INPUT or OUTPUT
 	void 			gpioPinMode(uint8_t pin, bool mode);		//set a unique pin as IN(1) or OUT (0)
 	void 			gpioPort(uint8_t value);					//write data to all pins
 	//void			gpioPort(byte lowByte, byte highByte);		//same as abowe but uses 2 separate bytes (not applicable to this chip)
@@ -85,11 +86,9 @@ public:
 	int 			gpioDigitalRead(uint8_t pin);				//read data from one pin
 	unsigned int 	gpioRegisterRead(byte reg);					//read a chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
-	void 			gpioRegisterWrite(byte reg,byte data);		//write a chip register
-	void			portPullup(bool data);						// true=pullup, false=pulldown all pins
+	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a chip register
+	void			portPullup(uint8_t data);						// true=pullup, false=pulldown all pins
 	// direct access commands
-    void			writeByte(byte addr, byte data);	
-	//void 			writeWord(byte addr, uint16_t data);        // not applicable
 	uint8_t 		readAddress(byte addr);
 	
 	//------------------------- REGISTERS
@@ -115,5 +114,6 @@ private:
 	void 			endSend();
 	uint8_t			_gpioDirection;
 	uint8_t			_gpioState;
+    void			writeByte(byte addr, byte data);	
 };
 #endif
