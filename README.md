@@ -52,10 +52,10 @@ Here's a list of the GPIO's chip managed:<br>
 <td><b>tca9555</b></td><td>TI</td><td>16</td><td>I2C</td><td>INT/64adrs</td><td>testing</td>
 </tr>
 <tr>
-<td><b>max6957</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>planned</td>
+<td><b>max6957</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>testing</td>
 </tr>
 <tr>
-<td><b>max7301</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>planned</td>
+<td><b>max7301</b></td><td>TI</td><td>20/28</td><td>I2C</td><td>INT/64adrs</td><td>testing</td>
 </tr>
 <tr>
 <td><b>max7311</b></td><td>TI</td><td>16</td><td>I2C</td><td>INT/64adrs/hot insertion</td><td>testing</td>
