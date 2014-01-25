@@ -159,7 +159,8 @@ Why create an unified library? It's better create single libraries for chip fami
  gpio.gpioDigitalWrite(pin,state);//set individual pin HIGH or LOW
  gpio.gpioDigitalRead(pin);//read the state of one pin
  gpio.gpioDigitalReadFast(pin);//experimental. Read the state of a pin from the library buffer
- gpio.gpioRegisterRead(register);//not available to all chip, read the specific register
+ gpio.gpioRegisterReadByte(register);//not available to all chip, read a byte from the specific register
+ gpio.gpioRegisterReadWord(register);//not available to all chip, read a word from the specific register
  gpio.gpioRegisterWriteByte(register,data);//write byte directly in chip register
  gpio.gpioRegisterWriteWord(register,data);//write word directly in chip register(not 8 bit chip)
  gpio.portPullup(HIGH or LOW or data);//Set pullup on input pin (not all chip!)
@@ -193,9 +194,9 @@ In the .h file of your existing library add this lines just after the aruino.h i
     bla
     
     uint8_t 		_cs;//needed for this chip
-	   uint8_t 		_adrs;//needed for this chip (if you using HAEN)
+    uint8_t 		_adrs;//needed for this chip (if you using HAEN)
 
-	   mcp23s17		mygpio;//here the instance
+   mcp23s17		mygpio;//here the instance
 ```
 
 	 As you noticed I have included also the _cs pin var and _adrs var needed for the chip I choose for demo.
@@ -217,7 +218,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
-version <b>0.5b7</b> - beta release - only some driver released and partially tested!!!<br><br>
+version <b>0.6b1</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
