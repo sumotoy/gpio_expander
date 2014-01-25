@@ -34,7 +34,8 @@ readGpioPort	KEYWORD2
 readGpioPortFast	KEYWORD2
 gpioDigitalWrite	KEYWORD2
 gpioDigitalRead	KEYWORD2
-gpioRegisterRead	KEYWORD2
+gpioRegisterReadByte	KEYWORD2
+gpioRegisterReadWord	KEYWORD2
 gpioDigitalReadFast	KEYWORD2
 gpioRegisterWriteByte	KEYWORD2
 gpioRegisterWriteWord	KEYWORD2

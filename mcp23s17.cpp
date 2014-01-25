@@ -165,11 +165,21 @@ int mcp23s17::gpioDigitalReadFast(uint8_t pin){
 	}
 }
 
-unsigned int mcp23s17::gpioRegisterRead(byte reg){
-  unsigned int data = 0;
+uint8_t mcp23s17::gpioRegisterReadByte(byte reg){
+  uint8_t data = 0;
     startSend(1);
     SPI.transfer(reg);
     data = SPI.transfer(0);
+    endSend();
+  return data;
+}
+
+uint16_t mcp23s17::gpioRegisterReadWord(byte reg){
+  uint16_t data = 0;
+    startSend(1);
+    SPI.transfer(reg);
+    data = SPI.transfer(0);
+	data = SPI.transfer(0) << 8;
     endSend();
   return data;
 }

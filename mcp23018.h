@@ -16,6 +16,7 @@ Version history:
 0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
 0.5b3: added some drivers
 0.5b4: ability to include library inside other libraries.
+0.6b1: Changed gpioRegisterRead to gpioRegisterReadByte. Added gpioRegisterReadWord (for some GPIO)
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.5b7
+	Version:0.6b1
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
@@ -87,7 +88,8 @@ public:
 	
 	void 			gpioDigitalWrite(uint8_t pin, bool value);  //write data to one pin
 	int 			gpioDigitalRead(uint8_t pin);				//read data from one pin
-	unsigned int 	gpioRegisterRead(byte reg);					//read a chip register
+	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
+	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
 	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a byte in a chip register
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register

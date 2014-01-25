@@ -137,8 +137,8 @@ int pca9555::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
-unsigned int pca9555::gpioRegisterRead(byte reg){
-  unsigned int data = 0;
+uint8_t pca9555::gpioRegisterReadByte(byte reg){
+  uint8_t data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(reg);

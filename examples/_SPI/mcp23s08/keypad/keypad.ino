@@ -39,7 +39,7 @@ void setup() {
   mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
   mkeypad.gpioRegisterWriteByte(mkeypad.GPINTEN,0b00001111);//int on change enable on pin 0..3
 
-  mkeypad.gpioRegisterRead(mkeypad.INTCAP);//clear int register
+  mkeypad.gpioRegisterReadByte(mkeypad.INTCAP);//clear int register
   
   pinMode(INTpin, INPUT);
   digitalWrite(INTpin, HIGH);
@@ -86,7 +86,7 @@ byte handleKeypress(){
     delay(30);//a kinda debounce
     //start keyscan
     //read INTCAP register and store the value, this contain the row
-    row = mkeypad.gpioRegisterRead(mkeypad.INTCAP);
+    row = mkeypad.gpioRegisterReadByte(mkeypad.INTCAP);
     // ...now identify the column
     //invert the direction of the pins IODIR
     mkeypad.gpioRegisterWriteByte(mkeypad.IODIR,0b11110000);//pin0..3(out) / 4...7(in)
@@ -95,7 +95,7 @@ byte handleKeypress(){
     mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b11110000);//default comparison value for pin 4..7
     mkeypad.gpioRegisterWriteByte(mkeypad.GPINTEN,0b11110000);//int on change enable on pin 4..7
     //now read GPIO to get the column
-    col = mkeypad.gpioRegisterRead(mkeypad.GPIO);
+    col = mkeypad.gpioRegisterReadByte(mkeypad.GPIO);
     // combine in OR the 2 register
     res = row|col;
     if (res == 0xF0) res = 0;
@@ -105,7 +105,7 @@ byte handleKeypress(){
     mkeypad.gpioRegisterWriteByte(mkeypad.DEFVAL,0b00001111);//default comparison value for pin 0..3
     // Cannot put back the int register since key it's still down!
     // so wait until key has been released
-    while(mkeypad.gpioRegisterRead(mkeypad.GPIO) != 0x0F){
+    while(mkeypad.gpioRegisterReadByte(mkeypad.GPIO) != 0x0F){
       delayMicroseconds(15);
     }
     //put back the interrupt register since now key has been released
@@ -115,6 +115,5 @@ byte handleKeypress(){
   }
   return res;
 }
-
 
 

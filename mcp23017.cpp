@@ -152,14 +152,28 @@ int mcp23017::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
-unsigned int mcp23017::gpioRegisterRead(byte reg){
-  unsigned int data = 0;
+uint8_t mcp23017::gpioRegisterReadByte(byte reg){
+  uint8_t data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(reg);
 		Wire.endTransmission();
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
 		data = Wire.read();
+	}
+  return data;
+}
+
+
+uint16_t mcp23017::gpioRegisterReadWord(byte reg){
+  uint16_t data = 0;
+	if (!_error){
+		Wire.beginTransmission(_adrs);
+		Wire.write(reg);
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
+		data = Wire.read();
+		data = Wire.read() << 8;
 	}
   return data;
 }

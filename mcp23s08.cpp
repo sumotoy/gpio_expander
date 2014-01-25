@@ -157,8 +157,8 @@ int mcp23s08::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
-unsigned int mcp23s08::gpioRegisterRead(byte reg){
-  unsigned int data = 0;
+uint8_t mcp23s08::gpioRegisterReadByte(byte reg){
+  uint8_t data = 0;
     startSend(1);
     SPI.transfer(reg);
     data = SPI.transfer(0);

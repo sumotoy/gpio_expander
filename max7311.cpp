@@ -138,8 +138,8 @@ int max7311::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
-unsigned int max7311::gpioRegisterRead(byte reg){
-  unsigned int data = 0;
+uint8_t max7311::gpioRegisterReadByte(byte reg){
+  uint8_t data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(reg);
