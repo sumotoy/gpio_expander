@@ -4,19 +4,19 @@
 
 #include <Arduino.h>
 
-#include "mcp23s17.h"
+#include "max7301.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
-mcp23s17::mcp23s17(){
+max7301::max7301(){
 }
 
 
-mcp23s17::mcp23s17(const uint8_t csPin,const uint8_t haenAdrs){
+max7301::max7301(const uint8_t csPin,const uint8_t haenAdrs){
 	postSetup(csPin,haenAdrs);
 }
 
 
-void mcp23s17::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
+void max7301::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
 	if (haenAdrs > 0x19 && haenAdrs < 0x28){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;
@@ -42,7 +42,7 @@ void mcp23s17::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 }
 
 
-void mcp23s17::begin(bool protocolInitOverride) {
+void max7301::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
 		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
@@ -52,7 +52,6 @@ void mcp23s17::begin(bool protocolInitOverride) {
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
 	delay(100);
-	_useHaen == 1 ? writeByte(IOCON,0b00101000) : writeByte(IOCON,0b00100000);
 	/*
     if (_useHaen){
 		writeByte(IOCON,0b00101000);//read datasheet for details!
@@ -66,17 +65,21 @@ void mcp23s17::begin(bool protocolInitOverride) {
 
 
 
-uint16_t mcp23s17::readAddress(byte addr){
+
+
+uint16_t max7301::readAddress(byte addr){
+	byte low_byte = 0x00;
 	startSend(1);
 	SPI.transfer(addr);
-	byte low_byte  = SPI.transfer(0x0);
+	low_byte  = SPI.transfer(0x0);
 	byte high_byte = SPI.transfer(0x0);
 	endSend();
 	return byte2word(high_byte,low_byte);
 }
 
 
-void mcp23s17::gpioPinMode(uint16_t mode){
+
+void max7301::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
 	} else if (mode == OUTPUT){	
@@ -88,7 +91,7 @@ void mcp23s17::gpioPinMode(uint16_t mode){
 	writeWord(IODIR,_gpioDirection);
 }
 
-void mcp23s17::gpioPinMode(uint8_t pin, bool mode){
+void max7301::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 15){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
 		/*
@@ -103,7 +106,7 @@ void mcp23s17::gpioPinMode(uint8_t pin, bool mode){
 }
 
 
-void mcp23s17::gpioPort(uint16_t value){
+void max7301::gpioPort(uint16_t value){
 	if (value == HIGH){
 		_gpioState = 0xFFFF;
 	} else if (value == LOW){	
@@ -114,21 +117,21 @@ void mcp23s17::gpioPort(uint16_t value){
 	writeWord(GPIO,_gpioState);
 }
 
-void mcp23s17::gpioPort(byte lowByte, byte highByte){
+void max7301::gpioPort(byte lowByte, byte highByte){
 	_gpioState = byte2word(highByte,lowByte);
 	writeWord(GPIO,_gpioState);
 }
 
 
-uint16_t mcp23s17::readGpioPort(){
+uint16_t max7301::readGpioPort(){
 	return readAddress(GPIO);
 }
 
-uint16_t mcp23s17::readGpioPortFast(){
+uint16_t max7301::readGpioPortFast(){
 	return _gpioState;
 }
 
-void mcp23s17::portPullup(uint16_t data) {
+void max7301::portPullup(uint16_t data) {
 	if (data == HIGH){
 		_gpioState = 0xFFFF;
 	} else if (data == LOW){	
@@ -140,7 +143,7 @@ void mcp23s17::portPullup(uint16_t data) {
 }
 
 
-void mcp23s17::gpioDigitalWrite(uint8_t pin, bool value){
+void max7301::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 15){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
 		/*
@@ -155,19 +158,22 @@ void mcp23s17::gpioDigitalWrite(uint8_t pin, bool value){
 }
 
 
-int mcp23s17::gpioDigitalRead(uint8_t pin){
+int max7301::gpioDigitalRead(uint8_t pin){
 	if (pin < 15) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
 
-int mcp23s17::gpioDigitalReadFast(uint8_t pin){
-	int temp = 0;
-	if (pin < 15) temp = bitRead(_gpioState,pin);
-	return temp;
+int max7301::gpioDigitalReadFast(uint8_t pin){
+	if (pin < 15){//0...15
+		int temp = bitRead(_gpioState,pin);
+		return temp;
+	} else {
+		return 0;
+	}
 }
 
-uint8_t mcp23s17::gpioRegisterReadByte(byte reg){
+uint8_t max7301::gpioRegisterReadByte(byte reg){
   uint8_t data = 0;
     startSend(1);
     SPI.transfer(reg);
@@ -176,7 +182,7 @@ uint8_t mcp23s17::gpioRegisterReadByte(byte reg){
   return data;
 }
 
-uint16_t mcp23s17::gpioRegisterReadWord(byte reg){
+uint16_t max7301::gpioRegisterReadWord(byte reg){
   uint16_t data = 0;
     startSend(1);
     SPI.transfer(reg);
@@ -186,23 +192,23 @@ uint16_t mcp23s17::gpioRegisterReadWord(byte reg){
   return data;
 }
 
-void mcp23s17::gpioRegisterWriteByte(byte reg,byte data){
+void max7301::gpioRegisterWriteByte(byte reg,byte data){
 	writeByte(reg,(byte)data);
 }
 
-void mcp23s17::gpioRegisterWriteWord(byte reg,word data){
+void max7301::gpioRegisterWriteWord(byte reg,word data){
 	writeWord(reg,(word)data);
 }
 
 /* ------------------------------ Low Level ----------------*/
-void mcp23s17::writeByte(byte addr, byte data){
+void max7301::writeByte(byte addr, byte data){
 	startSend(0);
 	SPI.transfer(addr);
 	SPI.transfer(data);
 	endSend();
 }
 
-void mcp23s17::writeWord(byte addr, uint16_t data){
+void max7301::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
 	SPI.transfer(word2lowByte(data));
@@ -210,7 +216,7 @@ void mcp23s17::writeWord(byte addr, uint16_t data){
 	endSend();
 }
 
-void mcp23s17::startSend(bool mode){
+void max7301::startSend(bool mode){
 #if defined(__FASTWRITE)
 	digitalWriteFast(_cs, LOW);
 #else
@@ -226,7 +232,7 @@ void mcp23s17::startSend(bool mode){
 	*/
 }
 
-void mcp23s17::endSend(){
+void max7301::endSend(){
 #if defined(__FASTWRITE)
 	digitalWriteFast(_cs, HIGH);
 #else

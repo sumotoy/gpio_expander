@@ -37,10 +37,7 @@ void mcp23008::postSetup(const uint8_t adrs){
 }
 
 void mcp23008::begin(bool protocolInitOverride) {
-	if (!protocolInitOverride && !_error){
-		Wire.begin();
-	}	
-
+	if (!protocolInitOverride && !_error) Wire.begin();
 	delay(100);
 	writeByte(IOCON,0b00100000);
 	_gpioDirection = 0xFF;//all in
@@ -77,11 +74,14 @@ void mcp23008::gpioPinMode(uint8_t mode){
 
 void mcp23008::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 8){//0...7
+		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
+		/*
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
 		} else {
 			bitClear(_gpioDirection,pin);
 		}
+		*/
 		writeByte(IODIR,_gpioDirection);
 	}
 }
@@ -108,12 +108,9 @@ uint8_t mcp23008::readGpioPortFast(){
 }
 
 int mcp23008::gpioDigitalReadFast(uint8_t pin){
-	if (pin < 8){//0...7
-		int temp = bitRead(_gpioState,pin);
-		return temp;
-	} else {
-		return 0;
-	}
+	int temp = 0;
+	if (pin < 8) temp = bitRead(_gpioState,pin);//0...7
+	return temp;
 }
 
 void mcp23008::portPullup(uint8_t data) {
@@ -131,11 +128,14 @@ void mcp23008::portPullup(uint8_t data) {
 
 void mcp23008::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 8){//0...7
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+		/*
 		if (value){
 			bitSet(_gpioState,pin);
 		} else {
 			bitClear(_gpioState,pin);
 		}
+		*/
 		writeByte(GPIO,_gpioState);
 	}
 }

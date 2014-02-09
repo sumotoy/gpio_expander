@@ -9,7 +9,7 @@
 	
 model:			company:		pins:		protocol:		Special Features:
 ---------------------------------------------------------------------------------------------------------------------
-mcp23s17		Microchip		 16			SPI					INT/HAEN
+max6957		Maxim		 		20/28			SPI					INT
 ---------------------------------------------------------------------------------------------------------------------
 Version history:
 0.5b1: first release, just coded and never tested
@@ -37,46 +37,169 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.6b2 - small optimizations
+	Version:0.6b1
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
-/* ------------------------------ MCP23S17 WIRING ------------------------------------
+/* ------------------------------ max6957 WIRING ------------------------------------
 This chip has a very useful feature called HAEN that allow you to share the same CS pin trough
 8 different addresses. Of course chip has to be Microchip and should be assigned to different addresses!
 
 Basic Address:  00100 A2 A1 A0 (from 0x20 to 0x27)
 A2,A1,A0 tied to ground = 0x20
+
+28PIN version
 				__ __
-		IOB-0 [|  U  |] IOA-7
-		IOB-1 [|     |] IOA-6
-		IOB-2 [|     |] IOA-5
-		IOB-3 [|     |] IOA-4
-		IOB-4 [|     |] IOA-3
-		IOB-5 [|     |] IOA-2
-		IOB-6 [|     |] IOA-1
-		IOB-7 [|     |] IOA-0
-		++++  [|     |] INT-A
-		GND   [|     |] INT-B
-		CS    [|     |] RST (connect to +)
-		SCK   [|     |] A2
-		MOSI  [|     |] A1
-		MISO  [|_____|] A0
+		ISET  [|  U  |] +++++
+		GND   [|     |] CS
+		GND   [|     |] MISO
+	    MOSI  [|     |] SCLK
+	  IOB-12  [|     |] IOB-31
+	  IOB-13  [|     |] IOB-30
+	  IOB-14  [|     |] IOB-29
+	  IOB-15  [|     |] IOB-28
+	  IOB-16  [|     |] IOB-27
+	  IOB-17  [|     |] IOB-26
+	  IOB-18  [|     |] IOB-25
+	  IOB-19  [|     |] IOB-24
+	  IOB-20  [|     |] IOB-23
+	  IOB-21  [|_____|] IOB-22
+	
+36PIN version	
+  				__________
+		ISET  [|     U    |] +++++
+		GND   [|          |] CS
+		GND   [|          |] MISO
+	    MOSI  [|          |] SCLK
+	  IOB-08  [|          |] IOB-04
+	  IOB-12  [|          |] IOB-31
+	  IOB-09  [|          |] IOB-05
+	  IOB-13  [|          |] IOB-30
+	  IOB-10  [|          |] IOB-06
+	  IOB-14  [|          |] IOB-29
+	  IOB-11  [|          |] IOB-07
+	  IOB-15  [|          |] IOB-28
+	  IOB-16  [|          |] IOB-27
+	  IOB-17  [|          |] IOB-26
+	  IOB-18  [|          |] IOB-25
+	  IOB-19  [|          |] IOB-24
+	  IOB-20  [|          |] IOB-23
+	  IOB-21  [|__________|] IOB-22
 */
-#ifndef _MCP23S17_H_
-#define _MCP23S17_H_
+/*
+COMMANDS
+CONFIGURATION							0x04
+TRANSITION DETECTION MASK				0x06
+PORT CONFIGURATION P07,P06,P05,P04		0x09
+PORT CONFIGURATION P11,P10,P09,P08		0x0A
+PORT CONFIGURATION P15,P14,P13,P12		0x0B
+PORT CONFIGURATION P19,P18,P17,P16		0x0C
+PORT CONFIGURATION P23,P22,P21,P20		0x0D
+PORT CONFIGURATION P27,P26,P25,P24		0x0E
+PORT CONFIGURATION P31,P30,P29,P28		0x0F
+MAX7301
+4-Wire-Interfaced, 2.5V to 5.5V, 20-Port and
+28-Port I/O Expander
+______________________________________________________________________________________ 13
+Table 4. Power-Up Configuration
+REGISTER DATA	REGISTER FUNCTION	POWER-UP CONDITION	ADDRESS	CODE	(HEX)	D7 D6 D5 D4 D3 D2 D1 D0		Port Register	Bits 4 to 31	GPIO Output Low	0x24 to 0x3F
+XXXXXXX
+0
+Configuration
+Register
+Shutdown Enabled
+Transition Detection Disabled
+0x04
+00XX
+XXX
+0
+Input Mask
+Register
+All Clear (Masked Off) 0x06
+X000
+000
+0
+Port
+Configuration
+P7, P6, P5, P4: GPIO Inputs Without Pullup 0x09
+1010101
+0
+Port
+Configuration
+P11, P10, P9, P8: GPIO Inputs Without Pullup 0x0A
+1010101
+0
+Port
+Configuration
+P15, P14, P13, P12: GPIO Inputs Without
+Pullup
+0x0B
+1010101
+0
+Port
+Configuration
+P19, P18, P17, P16: GPIO Inputs Without
+Pullup
+0x0C
+1010101
+0
+Port
+Configuration
+P23, P22, P21, P20: GPIO Inputs Without
+Pullup
+0x0D
+1010101
+0
+Port
+Configuration
+P27, P26, P25, P24: GPIO Inputs Without
+Pullup
+0x0E
+1010101
+0
+Port
+Configuration
+P31, P30, P29, P28: GPIO Inputs Without
+Pullup
+0x0F
+1010101
+0
+X = Unused bits; if read, zero results.
+Table 5. Configuration Register Format
+REGISTER DATA
+FUNCTION
+ADDRESS CODE
+(HEX)
+D7 D6 D5 D4 D3 D2 D1 D0
+Configuration Register
+0x04 M 0
+XXXXXS
+Table 6. Shutdown Control (S Data Bit D0) Format
+REGISTER DATA
+FUNCTION
+ADDRESS CODE
+(HEX)
+D7 D6 D5 D4 D3 D2 D1 D0
+Shutdown 0x04 M 0
+XXXXX0
+Normal Operation 0x04 M 0
+XXXXX
+
+*/
+#ifndef _MAX6957_H_
+#define _MAX6957_H_
 
 #include <inttypes.h>
 
 #include "gpio_expander.h"
 
 
-class mcp23s17 : public gpio_expander
+class max6957 : public gpio_expander
 {
 
 public:
-	mcp23s17(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
-	mcp23s17();//For include inside other libraries
+	max6957(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
+	max6957();//For include inside other libraries
 	void 			postSetup(const uint8_t csPin,const uint8_t haenAdrs);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
     

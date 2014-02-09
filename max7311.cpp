@@ -75,11 +75,14 @@ void max7311::gpioPinMode(uint16_t mode){
 
 void max7311::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 15){//0...15
+		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
+		/*
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
 		} else {
 			bitClear(_gpioDirection,pin);
 		}
+		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -111,23 +114,23 @@ uint16_t max7311::readGpioPortFast(){
 }
 
 int max7311::gpioDigitalReadFast(uint8_t pin){
-	if (pin < 15){//0...15
-		int temp = bitRead(_gpioState,pin);
-		return temp;
-	} else {
-		return 0;
-	}
+	int temp = 0;
+	if (pin < 15) temp = bitRead(_gpioState,pin);
+	return temp;
 }
 
 
 
 void max7311::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 15){//0...15
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+		/*
 		if (value){
 			bitSet(_gpioState,pin);
 		} else {
 			bitClear(_gpioState,pin);
 		}
+		*/
 		writeWord(GPPU,_gpioState);
 	}
 }

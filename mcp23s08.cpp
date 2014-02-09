@@ -50,11 +50,14 @@ void mcp23s08::begin(bool protocolInitOverride) {
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
 	delay(100);
+	_useHaen == 1 ? writeByte(IOCON,0b00101000) : writeByte(IOCON,0b00100000);
+	/*
     if (_useHaen){
 		writeByte(IOCON,0b00101000);//read datasheet for details!
 	} else {
 		writeByte(IOCON,0b00100000);
 	}
+	*/
 	_gpioDirection = 0xFF;//all in
 	_gpioState = 0x00;//all low 
 }
@@ -76,10 +79,10 @@ uint8_t mcp23s08::readAddress(byte addr){
 
 void mcp23s08::gpioPinMode(uint8_t mode){
 	if (mode == INPUT){
-		_gpioDirection = 0xFFFF;
+		_gpioDirection = 0xFF;
 	} else if (mode == OUTPUT){	
-		_gpioDirection = 0x0000;
-		_gpioState = 0x0000;
+		_gpioDirection = 0x00;
+		_gpioState = 0x00;
 	} else {
 		_gpioDirection = mode;
 	}
@@ -88,20 +91,23 @@ void mcp23s08::gpioPinMode(uint8_t mode){
 
 void mcp23s08::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 8){//0...7
+		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
+		/*
 		if (mode == INPUT){
 			bitSet(_gpioDirection,pin);
 		} else {
 			bitClear(_gpioDirection,pin);
 		}
+		*/
 		writeByte(IODIR,_gpioDirection);
 	}
 }
 
 void mcp23s08::gpioPort(uint8_t value){
 	if (value == HIGH){
-		_gpioState = 0xFFFF;
+		_gpioState = 0xFF;
 	} else if (value == LOW){	
-		_gpioState = 0x0000;
+		_gpioState = 0x00;
 	} else {
 		_gpioState = value;
 	}
@@ -128,9 +134,9 @@ int mcp23s08::gpioDigitalReadFast(uint8_t pin){
 
 void mcp23s08::portPullup(uint8_t data) {
 	if (data == HIGH){
-		_gpioState = 0xFFFF;
+		_gpioState = 0xFF;
 	} else if (data == LOW){	
-		_gpioState = 0x0000;
+		_gpioState = 0x00;
 	} else {
 		_gpioState = data;
 	}
@@ -142,11 +148,14 @@ void mcp23s08::portPullup(uint8_t data) {
 
 void mcp23s08::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 8){//0...7
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+		/*
 		if (value){
 			bitSet(_gpioState,pin);
 		} else {
 			bitClear(_gpioState,pin);
 		}
+		*/
 		writeByte(GPIO,_gpioState);
 	}
 }
@@ -178,11 +187,14 @@ void mcp23s08::startSend(bool mode){
 #else
 	digitalWrite(_cs, LOW);
 #endif
+	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
+	/*
 	if (mode){//IN
 		SPI.transfer(_readCmd);
 	} else {//OUT
 		SPI.transfer(_writeCmd);
 	}
+	*/
 }
 
 void mcp23s08::endSend(){
