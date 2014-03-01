@@ -24,7 +24,8 @@
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.8b1
+	Version:0.8b3 - Fixed an error that blocks I/O 16 in many functions
+	(thanks Thorsten to point me this)
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 

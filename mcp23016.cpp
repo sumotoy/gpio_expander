@@ -74,7 +74,7 @@ void mcp23016::gpioPinMode(uint16_t mode){
 }
 
 void mcp23016::gpioPinMode(uint8_t pin, bool mode){
-	if (pin < 15){//0...15
+	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
 		/*
 		if (mode == INPUT){
@@ -114,7 +114,7 @@ uint16_t mcp23016::readGpioPortFast(){
 
 int mcp23016::gpioDigitalReadFast(uint8_t pin){
 	int temp = 0;
-	if (pin < 15) temp = bitRead(_gpioState,pin);
+	if (pin < 16) temp = bitRead(_gpioState,pin);
 	return temp;
 }
 
@@ -122,7 +122,7 @@ int mcp23016::gpioDigitalReadFast(uint8_t pin){
 
 
 void mcp23016::gpioDigitalWrite(uint8_t pin, bool value){
-	if (pin < 15){//0...15
+	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
 		/*
 		if (value){
@@ -137,7 +137,7 @@ void mcp23016::gpioDigitalWrite(uint8_t pin, bool value){
 
 
 int mcp23016::gpioDigitalRead(uint8_t pin){
-	if (pin < 15) return (int)(readAddress(GPIO) & 1 << pin);
+	if (pin < 16) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
