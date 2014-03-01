@@ -218,7 +218,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
-version <b>0.6b1</b> - beta release - only some driver released and partially tested!!!<br><br>
+version <b>0.8b3</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
