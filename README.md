@@ -218,7 +218,29 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
-version <b>0.8b3</b> - beta release - only some driver released and partially tested!!!<br><br>
+<b>NEW! SUPPORT FOR SPI TRANSACTION</b>
+Now library offer a basic support for the upcoming <b>SPI transactions</b>!
+If the SPI library support SPI transactions it's possible to force this library to use it by instantiate
+the library like this:
+```
+	mcp23s17 gpio(cspin, address, SPI-SPEED);//For SPI transaction
+```
+The new parameter SPI-SPEED it's in Megahertz and it's the desidered SPI speed you want for the chip used.
+The problem is that this parameter change from chip to chip and CPU used! The library has a rudimentary check control
+for the max speed in relation to chip/CPU so if you put a too high this will reverted to the max supported speed by
+chip and CPU.
+If you are using this library inside another one by default the library will automatically use SPI transactions at max
+speed supported by chip/CPU but you can still change this by call another NEW command:
+
+```
+	mcp23s17 gpio();//instance 
+	gpio.setSPIspeed(24000000);//call this before postSetup!This will set the SPI to 24Mhz (Teensy3)
+```
+Setting setSPIspeed to 0 will force library to use standard SPI.
+<b>ATTENTION!</b>
+Setting SPI speed must be do conciounsly, you need to know exact if your CPU support that particular speed!
+  
+version <b>0.8b6</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
