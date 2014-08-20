@@ -8,10 +8,38 @@
 #include <../SPI/SPI.h>//this chip needs SPI
 
 max7301::max7301(){
+#if defined (SPI_HAS_TRANSACTION)
+	_spiTransactionsSpeed = MAXSPISPEED;//set to max supported speed (in relation to chip and CPU)
+#else
+	_spiTransactionsSpeed = 0;
+#endif
+}
+
+void max7301::setSPIspeed(uint32_t spispeed){
+	#if defined (SPI_HAS_TRANSACTION)
+	if (spispeed > 0){
+		if (spispeed > MAXSPISPEED) {
+			_spiTransactionsSpeed = MAXSPISPEED;
+		} else {
+			_spiTransactionsSpeed = spispeed;
+		}
+	} else {
+		_spiTransactionsSpeed = 0;//disable SPItransactons
+	}
+	#else
+	_spiTransactionsSpeed = 0;
+	#endif
 }
 
 
 max7301::max7301(const uint8_t csPin,const uint8_t haenAdrs){
+	_spiTransactionsSpeed = 0;
+	postSetup(csPin,haenAdrs);
+}
+
+max7301::max7301(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
+	setSPIspeed(spispeed);
+	
 	postSetup(csPin,haenAdrs);
 }
 
@@ -45,9 +73,17 @@ void max7301::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 void max7301::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
+		#if defined (SPI_HAS_TRANSACTION)
+		if (_spiTransactionsSpeed == 0){//do not use SPItransactons
+			SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
+			SPI.setBitOrder(MSBFIRST);
+			SPI.setDataMode(SPI_MODE0);
+		}
+		#else//do not use SPItransactons
 		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 		SPI.setBitOrder(MSBFIRST);
 		SPI.setDataMode(SPI_MODE0);
+		#endif
 	}	
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
@@ -217,6 +253,9 @@ void max7301::writeWord(byte addr, uint16_t data){
 }
 
 void max7301::startSend(bool mode){
+#if defined (SPI_HAS_TRANSACTION)
+	if (_spiTransactionsSpeed > 0) SPI.beginTransaction(SPISettings(_spiTransactionsSpeed, MSBFIRST, SPI_MODE0));
+#endif
 #if defined(__FASTWRITE)
 	digitalWriteFast(_cs, LOW);
 #else
@@ -237,6 +276,9 @@ void max7301::endSend(){
 	digitalWriteFast(_cs, HIGH);
 #else
 	digitalWrite(_cs, HIGH);
+#endif
+#if defined (SPI_HAS_TRANSACTION)
+	if (_spiTransactionsSpeed > 0) SPI.endTransaction();
 #endif
 }
 
