@@ -2,10 +2,14 @@
 
 #include <inttypes.h>
 
-#include <Arduino.h>
+#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
+#include "Energia.h"
+#else
+#include "Arduino.h"
+#endif
 
 #include "max7318.h"
-#include <../Wire/Wire.h>//this chip uses wire
+#include <../Wire/Wire.h>
 
 max7318::max7318(){
 }

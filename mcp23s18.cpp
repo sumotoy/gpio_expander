@@ -2,16 +2,47 @@
 
 #include <inttypes.h>
 
-#include <Arduino.h>
+#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
+#include "Energia.h"
+#else
+#include "Arduino.h"
+#endif
 
 #include "mcp23s18.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
 mcp23s18::mcp23s18(){
+#if defined (SPI_HAS_TRANSACTION)
+	_spiTransactionsSpeed = MAXSPISPEED;//set to max supported speed (in relation to chip and CPU)
+#else
+	_spiTransactionsSpeed = 0;
+#endif
+}
 
+void mcp23s18::setSPIspeed(uint32_t spispeed){
+	#if defined (SPI_HAS_TRANSACTION)
+	if (spispeed > 0){
+		if (spispeed > MAXSPISPEED) {
+			_spiTransactionsSpeed = MAXSPISPEED;
+		} else {
+			_spiTransactionsSpeed = spispeed;
+		}
+	} else {
+		_spiTransactionsSpeed = 0;//disable SPItransactons
+	}
+	#else
+	_spiTransactionsSpeed = 0;
+	#endif
 }
 
 mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs){
+	_spiTransactionsSpeed = 0;
+	postSetup(csPin,haenAdrs);
+}
+
+mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
+	setSPIspeed(spispeed);
+	
 	postSetup(csPin,haenAdrs);
 }
 
@@ -43,10 +74,18 @@ void mcp23s18::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 void mcp23s18::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
-		SPI.setClockDivider(SPI_CLOCK_DIV4); 
+		#if defined (SPI_HAS_TRANSACTION)
+		if (_spiTransactionsSpeed == 0){//do not use SPItransactons
+			SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
+			SPI.setBitOrder(MSBFIRST);
+			SPI.setDataMode(SPI_MODE0);
+		}
+		#else//do not use SPItransactons
+		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 		SPI.setBitOrder(MSBFIRST);
 		SPI.setDataMode(SPI_MODE0);
-	}	
+		#endif
+	}		
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
 	delay(100);
@@ -215,6 +254,9 @@ void mcp23s18::writeWord(byte addr, uint16_t data){
 }
 
 void mcp23s18::startSend(bool mode){
+#if defined (SPI_HAS_TRANSACTION)
+	if (_spiTransactionsSpeed > 0) SPI.beginTransaction(SPISettings(_spiTransactionsSpeed, MSBFIRST, SPI_MODE0));
+#endif
 #if defined(__FASTWRITE)
 	digitalWriteFast(_cs, LOW);
 #else
@@ -235,6 +277,9 @@ void mcp23s18::endSend(){
 	digitalWriteFast(_cs, HIGH);
 #else
 	digitalWrite(_cs, HIGH);
+#endif
+#if defined (SPI_HAS_TRANSACTION)
+	if (_spiTransactionsSpeed > 0) SPI.endTransaction();
 #endif
 }
 

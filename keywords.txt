@@ -19,6 +19,8 @@ pcf8575	KEYWORD1
 pca9555	KEYWORD1
 max7318 KEYWORD1
 max7311	KEYWORD1
+max6957	KEYWORD1
+max7301	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
