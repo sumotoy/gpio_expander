@@ -1,7 +1,7 @@
 gpio_expander library
 =====================
 
- Universal GPIO library for Arduinos and Teensy 2/3/3.x
+ Universal GPIO library for Arduino's, Teensy 2/3/3.x, Stellaris and all Energia IDE supported MCU's
  
 --------------------------------------------------------------------------------------
 
