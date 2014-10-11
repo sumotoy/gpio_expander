@@ -218,6 +218,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
+<b>NEW! SUPPORT FOR ENERGIA IDE</b> - still not tested -<br>
 <b>NEW! SUPPORT FOR SPI TRANSACTION</b>
 
 Now library offer a basic support for the upcoming <b>SPI transactions</b>!
@@ -245,7 +246,7 @@ Setting setSPIspeed to 0 will force library to use standard SPI.
 Setting SPI speed must be do consciously, you need to know exact if your CPU support that particular speed!
 Arduino has <b>SPI_CLOCK_DIVx</b> that (if I'm right) divide the main clock speed for a x (2,4,8,16,etc. on UNO), DUE has similar approach, Teensy has some strain since it's not strictly related to CPU clock (change to 72Mhz to 98Mhz will not change SPI speed).
   
-version <b>0.8b6</b> - beta release - only some driver released and partially tested!!!<br><br>
+version <b>0.8b7</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
