@@ -5,7 +5,8 @@ gpio_expander library
  
 --------------------------------------------------------------------------------------
 
-An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
+An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice) but also Energia MCU's!<br>
+**Warning**: Energia MCU's not tested, support it's just started so wait my OK before use this for Energia stuff!<br>
 Here's a list of the GPIO's chip managed:<br>
 
 <table>
