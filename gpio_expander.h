@@ -24,7 +24,8 @@
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.8b5 - Compatibility with Energia IDE? Support for SPI Transactions
+	Version:0.8b3 - Fixed an error that blocks I/O 16 in many functions
+	(thanks Thorsten to point me this)
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
@@ -33,11 +34,7 @@
 #define _GPIO_EXPANDER_H_
 
 #include <inttypes.h>
-#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
-#include "Energia.h"
-#else
-#include "Arduino.h"
-#endif
+#include <Arduino.h>
 
 
 #if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0 or 3.1

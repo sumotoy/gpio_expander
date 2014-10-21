@@ -2,11 +2,7 @@
 
 #include <inttypes.h>
 
-#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
-#include "Energia.h"
-#else
-#include "Arduino.h"
-#endif
+#include <Arduino.h>
 
 #include "max7301.h"
 #include <../SPI/SPI.h>//this chip needs SPI

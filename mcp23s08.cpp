@@ -2,11 +2,7 @@
 
 #include <inttypes.h>
 
-#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
-#include "Energia.h"
-#else
-#include "Arduino.h"
-#endif
+#include <Arduino.h>
 
 #include "mcp23s08.h"
 #include <../SPI/SPI.h>//this chip needs SPI
@@ -37,7 +33,6 @@ void mcp23s08::setSPIspeed(uint32_t spispeed){
 
 mcp23s08::mcp23s08(const uint8_t csPin,const uint8_t haenAdrs){
 	_spiTransactionsSpeed = 0;
-<<<<<<< HEAD
 	postSetup(csPin,haenAdrs);
 }
 
@@ -47,17 +42,6 @@ mcp23s08::mcp23s08(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed)
 	postSetup(csPin,haenAdrs);
 }
 
-=======
-	postSetup(csPin,haenAdrs);
-}
-
-mcp23s08::mcp23s08(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
-	setSPIspeed(spispeed);
-	
-	postSetup(csPin,haenAdrs);
-}
-
->>>>>>> origin/master
 
 void mcp23s08::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
 	_cs = csPin;
