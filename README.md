@@ -34,10 +34,10 @@ Here's a list of the GPIO's chip managed:<br>
 <td><b>mcp23016</b></td><td>Microchip</td><td>16</td><td>I2C</td><td>INT</td><td>done</td>
 </tr>
 <tr>
-<td><b>pcf8574</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT</td><td>dev</td>
+<td><b>pcf8574</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT</td><td>done</td>
 </tr>
 <tr>
-<td><b>pcf8574a</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT/different address range</td><td>dev</td>
+<td><b>pcf8574a</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT/different address range</td><td>done</td>
 </tr>
 <tr>
 <td><b>pcf8575</b></td><td>NTX</td><td>8</td><td>I2C</td><td>INT</td><td>planned</td>
