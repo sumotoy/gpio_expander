@@ -176,7 +176,7 @@ uint16_t mcp23017::gpioRegisterReadWord(byte reg){
 		Wire.endTransmission();
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
 		data = Wire.read();
-		data = Wire.read() << 8;
+		data += Wire.read() << 8;
 	}
   return data;
 }
