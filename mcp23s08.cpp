@@ -196,6 +196,15 @@ void mcp23s08::gpioDigitalWrite(uint8_t pin, bool value){
 	}
 }
 
+void mcp23s08::gpioDigitalWriteFast(uint8_t pin, bool value){
+	if (pin < 8){//0...8
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+	}
+}
+
+void mcp23s08::gpioPortUpdate(){
+	writeWord(GPIO,_gpioState);
+}
 
 int mcp23s08::gpioDigitalRead(uint8_t pin){
 	if (pin < 8) return (int)(readAddress(GPIO) & 1 << pin);

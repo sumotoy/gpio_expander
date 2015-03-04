@@ -149,6 +149,15 @@ void mcp23017::gpioDigitalWrite(uint8_t pin, bool value){
 	}
 }
 
+void mcp23017::gpioDigitalWriteFast(uint8_t pin, bool value){
+	if (pin < 16){//0...15
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+	}
+}
+
+void mcp23017::gpioPortUpdate(){
+	writeWord(GPIO,_gpioState);
+}
 
 int mcp23017::gpioDigitalRead(uint8_t pin){
 	if (pin < 16) return (int)(readAddress(GPIO) & 1 << pin);

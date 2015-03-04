@@ -86,6 +86,7 @@ public:
 	uint16_t 		readGpioPortFast();							
 
 	void 			gpioDigitalWrite(uint8_t pin, bool value);  //write data to one pin
+	void			gpioDigitalWriteFast(uint8_t pin, bool value);
 	int 			gpioDigitalRead(uint8_t pin);				//read data from one pin
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
@@ -93,6 +94,7 @@ public:
 	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a byte in a chip register
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register
 	void			portPullup(uint16_t data);						// HIGH=all pullup, LOW=all pulldown,0xxxx=you choose witch
+	void			gpioPortUpdate();
 	// direct access commands
 
 	uint16_t 		readAddress(byte addr);

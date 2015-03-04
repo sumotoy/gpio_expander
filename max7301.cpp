@@ -193,6 +193,15 @@ void max7301::gpioDigitalWrite(uint8_t pin, bool value){
 	}
 }
 
+void max7301::gpioDigitalWriteFast(uint8_t pin, bool value){
+	if (pin < 16){//0...15
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+	}
+}
+
+void max7301::gpioPortUpdate(){
+	writeWord(GPIO,_gpioState);
+}
 
 int max7301::gpioDigitalRead(uint8_t pin){
 	if (pin < 16) return (int)(readAddress(GPIO) & 1 << pin);

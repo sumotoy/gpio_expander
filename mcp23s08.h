@@ -67,22 +67,7 @@ A1,A0 tied to ground = 0x20
 #include "gpio_expander.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
-//defining max SPI speed (not definitive and can change in relation to chip used)
-#if defined (SPI_HAS_TRANSACTION)
-#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0 or 3.1
-#define MAXSPISPEED				32000000
-#elif defined(ARDUINO) && defined(__arm__) && !defined(CORE_TEENSY)	//DUE	
-#define MAXSPISPEED				24000000
-#elif defined(__32MX320F128H__) || defined(__32MX795F512L__) //uno and max		
-#define MAXSPISPEED				8000000
-#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#define MAXSPISPEED				2000000
-#elif defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644PA__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__)
-#define MAXSPISPEED				8000000
-#else
-#define MAXSPISPEED				2000000
-#endif
-#endif
+#include "_utility/SPI.parameters.h"
 
 class mcp23s08 : public gpio_expander
 {
@@ -103,11 +88,13 @@ public:
 	uint8_t 		readGpioPortFast();							
 	
 	void 			gpioDigitalWrite(uint8_t pin, bool value);  //write data to one pin
+	void			gpioDigitalWriteFast(uint8_t pin, bool value);
 	int 			gpioDigitalRead(uint8_t pin);				//read data from one pin
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
 	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a chip register
 	void			portPullup(uint8_t data);						// true=pullup, false=pulldown all pins
+	void			gpioPortUpdate();
 	// direct access commands
 	uint8_t 		readAddress(byte addr);
 	

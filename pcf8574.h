@@ -78,11 +78,12 @@ public:
 	void 			gpioPort(uint8_t value);					//HIGH=all Hi, LOW=all Low,0xxxx=you choose witch low or hi
 	uint8_t 		readGpioPort();								//read the state of the pins (all)
 	uint8_t 		readGpioPortFast();							//experimental! Works only when pins are outs!
-
+	void			gpioDigitalWriteFast(uint8_t pin, bool value);
 	void 			gpioDigitalWrite(uint8_t pin, bool value);  //write data to one pin
 	uint8_t 		gpioDigitalRead(uint8_t pin);				//read data from one pin
 	uint8_t 		gpioDigitalReadFast(uint8_t pin);           //experimental! Works only when pin are outs!
 	void 			gpioPinToggle(uint8_t pin);
+	void			gpioPortUpdate();
 	
 private:
 	uint8_t 		_adrs;

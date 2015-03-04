@@ -35,6 +35,7 @@ gpioPort	KEYWORD2
 readGpioPort	KEYWORD2
 readGpioPortFast	KEYWORD2
 gpioDigitalWrite	KEYWORD2
+gpioDigitalWriteFast	KEYWORD2
 gpioDigitalRead	KEYWORD2
 gpioRegisterReadByte	KEYWORD2
 gpioRegisterReadWord	KEYWORD2
@@ -42,6 +43,7 @@ gpioDigitalReadFast	KEYWORD2
 gpioRegisterWriteByte	KEYWORD2
 gpioRegisterWriteWord	KEYWORD2
 portPullup	KEYWORD2
+gpioPortUpdate	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

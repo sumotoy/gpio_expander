@@ -108,7 +108,9 @@ uint16_t mcp23s17::readAddress(byte addr){
 	byte low_byte  = SPI.transfer(0x0);
 	byte high_byte = SPI.transfer(0x0);
 	endSend();
-	return byte2word(high_byte,low_byte);
+	uint16_t temp = low_byte | (high_byte << 8);
+	return temp;
+	//return byte2word(high_byte,low_byte);
 }
 
 
@@ -151,7 +153,9 @@ void mcp23s17::gpioPort(uint16_t value){
 }
 
 void mcp23s17::gpioPort(byte lowByte, byte highByte){
-	_gpioState = byte2word(highByte,lowByte);
+	//_gpioState = byte2word(highByte,lowByte);
+	//_gpioState = lowByte | (highByte << 8);
+	_gpioState = highByte | (lowByte << 8);
 	writeWord(GPIO,_gpioState);
 }
 
@@ -179,17 +183,19 @@ void mcp23s17::portPullup(uint16_t data) {
 void mcp23s17::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeWord(GPIO,_gpioState);
 	}
 }
 
+void mcp23s17::gpioDigitalWriteFast(uint8_t pin, bool value){
+	if (pin < 16){//0...15
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+	}
+}
+
+void mcp23s17::gpioPortUpdate(){
+	writeWord(GPIO,_gpioState);
+}
 
 int mcp23s17::gpioDigitalRead(uint8_t pin){
 	if (pin < 16) return (int)(readAddress(GPIO) & 1 << pin);

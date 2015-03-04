@@ -118,6 +118,20 @@ void pcf8574::gpioDigitalWrite(uint8_t pin, bool value){
 	}
 }
 
+void pcf8574::gpioDigitalWriteFast(uint8_t pin, bool value){
+	if (pin < 8){//0...7
+		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
+	}
+}
+
+void pcf8574::gpioPortUpdate(){
+	if (!_error){
+		//uint8_t data = (_gpioInputs & ~_gpioDirection) | _gpioState;
+		Wire.beginTransmission(_adrs);
+		Wire.write(_gpioState);
+		Wire.endTransmission();
+	}
+}
 
 void pcf8574::updateGpio(){
 	if (!_error){

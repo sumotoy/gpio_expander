@@ -195,22 +195,7 @@ XXXXX
 #include "gpio_expander.h"
 #include <../SPI/SPI.h>//this chip needs SPI
 
-//defining max SPI speed (not definitive and can change in relation to chip used)
-#if defined (SPI_HAS_TRANSACTION)
-#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0 or 3.1
-#define MAXSPISPEED				32000000
-#elif defined(ARDUINO) && defined(__arm__) && !defined(CORE_TEENSY)	//DUE	
-#define MAXSPISPEED				24000000
-#elif defined(__32MX320F128H__) || defined(__32MX795F512L__) //uno and max		
-#define MAXSPISPEED				8000000
-#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#define MAXSPISPEED				2000000
-#elif defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644PA__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__)
-#define MAXSPISPEED				8000000
-#else
-#define MAXSPISPEED				2000000
-#endif
-#endif
+#include "_utility/SPI.parameters.h"
 
 class max6957 : public gpio_expander
 {
@@ -230,6 +215,7 @@ public:
 	uint16_t 		readGpioPortFast();							
 	
 	void 			gpioDigitalWrite(uint8_t pin, bool value);  //write data to one pin
+	void			gpioDigitalWriteFast(uint8_t pin, bool value);
 	int 			gpioDigitalRead(uint8_t pin);				//read data from one pin
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
@@ -237,6 +223,7 @@ public:
 	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a byte in a chip register
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register
 	void			portPullup(uint16_t data);						// HIGH=all pullup, LOW=all pulldown,0xxxx=you choose witch
+	void			gpioPortUpdate();
 	// direct access commands
 	uint16_t 		readAddress(byte addr);
 	
