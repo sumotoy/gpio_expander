@@ -6,7 +6,7 @@ gpio_expander library
 --------------------------------------------------------------------------------------
 
 An attempt to create an universal library that works with many common GPIO chips and can be used with Arduino's and Teensy's (my preferred choice)<br>
-Here's a list of the GPIO's chip managed:<br>
+Here's a list of the <b>GPIO's chip managed</b>:<br>
 
 <table>
 <tr>
@@ -123,7 +123,7 @@ The MCP23xxx registers are stored in each chip library extension so you can shar
 Library is modular, every chip it's an extension of the same library so it's easy to expand.<br>
 Why create an unified library? It's better create single libraries for chip families? Seems no!<br>Almost all GPIO chips have really similar programming, only Microchip families has more features and looks more complicated but the access it's almost the same for all so it have sense to build up an unified way to access these chips with common commands so you can easily use the chip you like without have to recode anithing, just be sure you don't need some special features of some particular chip.<br>
 
- How To Use:
+ <b>How To Use:</b>
  
  Library it's unified so you just need toi include the chip and his protocol, example for <b>mcp23017</b>
  
@@ -158,16 +158,20 @@ Why create an unified library? It's better create single libraries for chip fami
  gpio.readGpioPortFast();//experimental. Read the state of the library buffer instead of the chip.
  gpio.gpioDigitalWrite(pin,state);//set individual pin HIGH or LOW
  gpio.gpioDigitalRead(pin);//read the state of one pin
- gpio.gpioDigitalReadFast(pin);//experimental. Read the state of a pin from the library buffer
+ gpio.gpioDigitalReadFast(pin);//experimental. Read the state of a pin from the library pin register buffer
  gpio.gpioRegisterReadByte(register);//not available to all chip, read a byte from the specific register
  gpio.gpioRegisterReadWord(register);//not available to all chip, read a word from the specific register
  gpio.gpioRegisterWriteByte(register,data);//write byte directly in chip register
  gpio.gpioRegisterWriteWord(register,data);//write word directly in chip register(not 8 bit chip)
  gpio.portPullup(HIGH or LOW or data);//Set pullup on input pin (not all chip!)
+ //new commands from release 0.8b3
+ gpio.gpioDigitalWriteFast(pin,Val);//It updates only the library pin register buffer! It do not send data to the GPIO
+ //this is really useful when you need update separately some pin and the you will need the following command...
+ gpio.gpioPortUpdate();//this will effectively send the pin register to the GPIO chip! 
 
 ```
  
-Another example: How to include in another library?
+Another example: <b>How to include in another library?</b>
 
 Here's how to inlude and use this library inside an existing one.
 In the .h file of your existing library add this lines just after the aruino.h include or library protection declaration:
