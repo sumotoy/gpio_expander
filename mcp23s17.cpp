@@ -129,13 +129,6 @@ void mcp23s17::gpioPinMode(uint16_t mode){
 void mcp23s17::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -263,13 +256,6 @@ void mcp23s17::startSend(bool mode){
 	digitalWrite(_cs, LOW);
 #endif
 	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
-	/*
-	if (mode){//IN
-		SPI.transfer(_readCmd);
-	} else {//OUT
-		SPI.transfer(_writeCmd);
-	}
-	*/
 }
 
 void mcp23s17::endSend(){

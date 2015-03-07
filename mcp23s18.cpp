@@ -128,13 +128,6 @@ void mcp23s18::gpioPinMode(uint16_t mode){
 void mcp23s18::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -176,13 +169,6 @@ int mcp23s18::gpioDigitalReadFast(uint8_t pin){
 void mcp23s18::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeWord(GPIO,_gpioState);
 	}
 }
@@ -268,13 +254,6 @@ void mcp23s18::startSend(bool mode){
 	digitalWrite(_cs, LOW);
 #endif
 	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
-	/*
-	if (mode){//IN
-		SPI.transfer(_readCmd);
-	} else {//OUT
-		SPI.transfer(_writeCmd);
-	}
-	*/
 }
 
 void mcp23s18::endSend(){

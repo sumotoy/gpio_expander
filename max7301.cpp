@@ -257,13 +257,6 @@ void max7301::startSend(bool mode){
 	digitalWrite(_cs, LOW);
 #endif
 	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
-	/*
-	if (mode){//IN
-		SPI.transfer(_readCmd);
-	} else {//OUT
-		SPI.transfer(_writeCmd);
-	}
-	*/
 }
 
 void max7301::endSend(){
