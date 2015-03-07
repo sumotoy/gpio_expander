@@ -80,13 +80,6 @@ void mcp23018::gpioPinMode(uint16_t mode){
 void mcp23018::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -138,13 +131,6 @@ void mcp23018::portPullup(uint16_t data) {
 void mcp23018::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeWord(GPIO,_gpioState);
 	}
 }
@@ -184,7 +170,7 @@ uint16_t mcp23018::gpioRegisterReadWord(byte reg){
 		Wire.endTransmission();
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
 		data = Wire.read();
-		data = Wire.read() << 8;
+		data += Wire.read() << 8;//Ironicster
 	}
   return data;
 }

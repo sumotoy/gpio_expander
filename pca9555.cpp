@@ -75,13 +75,6 @@ void pca9555::gpioPinMode(uint16_t mode){
 void pca9555::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -123,13 +116,6 @@ int pca9555::gpioDigitalReadFast(uint8_t pin){
 void pca9555::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeWord(GPPU,_gpioState);
 	}
 }

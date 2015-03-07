@@ -75,13 +75,6 @@ void mcp23008::gpioPinMode(uint8_t mode){
 void mcp23008::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 8){//0...7
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeByte(IODIR,_gpioDirection);
 	}
 }
@@ -129,13 +122,6 @@ void mcp23008::portPullup(uint8_t data) {
 void mcp23008::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 8){//0...7
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeByte(GPIO,_gpioState);
 	}
 }
@@ -181,5 +167,3 @@ void mcp23008::writeByte(byte addr, byte data){
 		Wire.endTransmission();
 	}
 }
-
-

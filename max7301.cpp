@@ -130,13 +130,6 @@ void max7301::gpioPinMode(uint16_t mode){
 void max7301::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeWord(IODIR,_gpioDirection);
 	}
 }
@@ -182,13 +175,6 @@ void max7301::portPullup(uint16_t data) {
 void max7301::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeWord(GPIO,_gpioState);
 	}
 }
