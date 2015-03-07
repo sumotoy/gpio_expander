@@ -36,6 +36,11 @@ void max7311::postSetup(const uint8_t adrs){
 void max7311::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){
 		Wire.begin();
+		#if ARDUINO >= 157
+			Wire.setClock(400000UL); // Set I2C frequency to 400kHz
+		#else
+			TWBR = ((F_CPU / 400000UL) - 16) / 2; // Set I2C frequency to 400kHz
+		#endif
 	}
 	delay(100);
 	_gpioDirection = 0xFFFF;//all in
