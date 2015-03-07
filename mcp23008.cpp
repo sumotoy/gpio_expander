@@ -133,7 +133,7 @@ void mcp23008::gpioDigitalWriteFast(uint8_t pin, bool value){
 }
 
 void mcp23008::gpioPortUpdate(){
-	writeWord(GPIO,_gpioState);
+	writeByte(GPIO,_gpioState);
 }
 
 int mcp23008::gpioDigitalRead(uint8_t pin){

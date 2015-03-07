@@ -128,13 +128,6 @@ void mcp23s08::gpioPinMode(uint8_t mode){
 void mcp23s08::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 8){//0...7
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
-		/*
-		if (mode == INPUT){
-			bitSet(_gpioDirection,pin);
-		} else {
-			bitClear(_gpioDirection,pin);
-		}
-		*/
 		writeByte(IODIR,_gpioDirection);
 	}
 }
@@ -185,13 +178,6 @@ void mcp23s08::portPullup(uint8_t data) {
 void mcp23s08::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 8){//0...7
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
-		/*
-		if (value){
-			bitSet(_gpioState,pin);
-		} else {
-			bitClear(_gpioState,pin);
-		}
-		*/
 		writeByte(GPIO,_gpioState);
 	}
 }
@@ -203,7 +189,7 @@ void mcp23s08::gpioDigitalWriteFast(uint8_t pin, bool value){
 }
 
 void mcp23s08::gpioPortUpdate(){
-	writeWord(GPIO,_gpioState);
+	writeByte(GPIO,_gpioState);
 }
 
 int mcp23s08::gpioDigitalRead(uint8_t pin){
@@ -236,13 +222,6 @@ void mcp23s08::startSend(bool mode){
 	digitalWrite(_cs, LOW);
 #endif
 	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
-	/*
-	if (mode){//IN
-		SPI.transfer(_readCmd);
-	} else {//OUT
-		SPI.transfer(_writeCmd);
-	}
-	*/
 }
 
 void mcp23s08::endSend(){
