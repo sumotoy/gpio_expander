@@ -19,7 +19,7 @@ Version history:
 0.5b7: Changed functionalities of some function.
 0.6b1: Changed gpioRegisterRead to gpioRegisterReadByte. Added gpioRegisterReadWord (for some GPIO)
 0.6b3: Added basic support for SPI transactions, small optimizations.
-0.7:   New commands for fast single change state of gpio
+0.8b3: Added 2 more commands and 2 gpio chip.
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.6b3 - Added basic support for SPI Transactions
+	Version:0.8b3: Added 2 more commands and 2 gpio chip.
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 

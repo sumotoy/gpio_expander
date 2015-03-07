@@ -12,12 +12,7 @@ model:			company:		pins:		protocol:		Special Features:
 PCF8574			NTX		  		8			I2C					INT
 ---------------------------------------------------------------------------------------------------------------------
 Version history:
-0.5b1: first release, just coded and never tested
-0.5b2: fixed 2wire version, added portPullup, tested output mode (ok)
-0.5b3: added some drivers
-0.5b4: ability to include library inside other libraries.
-0.5b7: Changed functionalities of some function.
-0.6b1: Changed gpioRegisterRead to gpioRegisterReadByte. Added gpioRegisterReadWord (for some GPIO)
+0.8b3: Added 2 more commands and 2 gpio chip.
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -37,7 +32,7 @@ Version history:
 
 	
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.6b1
+	Version:0.8b3: Added 2 more commands and 2 gpio chip.
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
