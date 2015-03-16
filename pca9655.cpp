@@ -68,7 +68,7 @@ uint16_t pca9655::readAddress(byte addr){
 
 void pca9655::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
-		_gpioDirection = 0xFFFF;
+		_gpioDirection = 0xFFFF;//w pullup!
 	} else if (mode == OUTPUT){	
 		_gpioDirection = 0x0000;
 		_gpioState = 0x0000;
@@ -146,7 +146,7 @@ uint8_t pca9655::gpioRegisterReadByte(byte reg){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(reg);
-		Wire.endTransmission();
+		Wire.endTransmission(false);
 		Wire.requestFrom((uint8_t)_adrs,(uint8_t)1);
 		data = Wire.read();
 	}
