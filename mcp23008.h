@@ -70,7 +70,7 @@ class mcp23008 : public gpio_expander
 public:
 	mcp23008(const uint8_t adrs);
 	mcp23008();
-	void			postSetup(const uint8_t adrs);;//used with other libraries only
+	void			postSetup(const uint8_t adrs);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	

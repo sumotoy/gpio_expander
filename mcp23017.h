@@ -76,7 +76,7 @@ class mcp23017 : public gpio_expander
 public:
 	mcp23017(const uint8_t adrs);//0x20...0x27
 	mcp23017();
-	void			postSetup(const uint8_t adrs);;//used with other libraries only
+	void			postSetup(const uint8_t adrs);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	void 			gpioPinMode(uint16_t mode);					//OUTPUT=all out,INPUT=all in,0xxxx=you choose

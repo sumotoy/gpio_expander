@@ -9,8 +9,7 @@
 	
 model:			company:		pins:		protocol:		Special Features:
 ---------------------------------------------------------------------------------------------------------------------
-pca9655		      NTX		     16			I2C					INT/64 addresses
-tca9655		       TI		     16			I2C					INT/64 addresses
+pca9655		      ON		     16			I2C					INT/64 addresses
 ---------------------------------------------------------------------------------------------------------------------
 Version history:
 0.1: initial support
@@ -139,7 +138,7 @@ class pca9655 : public gpio_expander
 public:
 	pca9655(const uint8_t adrs);
 	pca9655();;//used with other libraries only
-	void			postSetup(const uint8_t adrs);;//used with other libraries only
+	void			postSetup(const uint8_t adrs);//used with other libraries only
 	
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 

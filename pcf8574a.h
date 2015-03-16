@@ -64,7 +64,7 @@ class pcf8574a : public gpio_expander
 public:
 	pcf8574a(const uint8_t adrs);
 	pcf8574a();
-	void			postSetup(const uint8_t adrs);;//used with other libraries only
+	void			postSetup(const uint8_t adrs);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
 	
