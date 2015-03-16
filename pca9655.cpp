@@ -4,18 +4,18 @@
 
 #include <Arduino.h>
 
-#include "pca9555.h"
+#include "pca9655.h"
 #include <../Wire/Wire.h>//this chip uses wire
 
-pca9555::pca9555(){
+pca9655::pca9655(){
 
 }
 
-pca9555::pca9555(const uint8_t adrs){
+pca9655::pca9655(const uint8_t adrs){
 	postSetup(adrs);
 }
 
-void pca9555::postSetup(const uint8_t adrs){
+void pca9655::postSetup(const uint8_t adrs){
 	if (adrs >= 0x20 && adrs <= 0x27){//basic addressing
 		_adrs = adrs;
 		_error = false;
@@ -32,7 +32,7 @@ void pca9555::postSetup(const uint8_t adrs){
 	IPOL = 		0x04;//Polarity Inversion Registers (0x04..0x05)(
 }
 
-void pca9555::begin(bool protocolInitOverride) {
+void pca9655::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride && !_error){
 		Wire.begin();
 		#if ARDUINO >= 157
@@ -49,7 +49,7 @@ void pca9555::begin(bool protocolInitOverride) {
 
 
 
-uint16_t pca9555::readAddress(byte addr){
+uint16_t pca9655::readAddress(byte addr){
 	byte low_byte = 0;
 	byte high_byte = 0;
 	if (!_error){
@@ -66,7 +66,7 @@ uint16_t pca9555::readAddress(byte addr){
 
 
 
-void pca9555::gpioPinMode(uint16_t mode){
+void pca9655::gpioPinMode(uint16_t mode){
 	if (mode == INPUT){
 		_gpioDirection = 0xFFFF;
 	} else if (mode == OUTPUT){	
@@ -78,14 +78,14 @@ void pca9555::gpioPinMode(uint16_t mode){
 	writeWord(IODIR,_gpioDirection);
 }
 
-void pca9555::gpioPinMode(uint8_t pin, bool mode){
+void pca9655::gpioPinMode(uint8_t pin, bool mode){
 	if (pin < 16){//0...15
 		mode == INPUT ? _gpioDirection |= (1 << pin) :_gpioDirection &= ~(1 << pin);
 		writeWord(IODIR,_gpioDirection);
 	}
 }
 
-void pca9555::gpioPort(uint16_t value){
+void pca9655::gpioPort(uint16_t value){
 	if (value == HIGH){
 		_gpioState = 0xFFFF;
 	} else if (value == LOW){	
@@ -96,21 +96,21 @@ void pca9555::gpioPort(uint16_t value){
 	writeWord(GPIO,_gpioState);
 }
 
-void pca9555::gpioPort(byte lowByte, byte highByte){
+void pca9655::gpioPort(byte lowByte, byte highByte){
 	_gpioState = byte2word(highByte,lowByte);
 	writeWord(GPIO,_gpioState);
 }
 
 
-uint16_t pca9555::readGpioPort(){
+uint16_t pca9655::readGpioPort(){
 	return readAddress(GPIO);
 }
 
-uint16_t pca9555::readGpioPortFast(){
+uint16_t pca9655::readGpioPortFast(){
 	return _gpioState;
 }
 
-int pca9555::gpioDigitalReadFast(uint8_t pin){
+int pca9655::gpioDigitalReadFast(uint8_t pin){
 	int temp = 0;
 	if (pin < 16) temp = bitRead(_gpioState,pin);
 	return temp;
@@ -119,29 +119,29 @@ int pca9555::gpioDigitalReadFast(uint8_t pin){
 
 
 
-void pca9555::gpioDigitalWrite(uint8_t pin, bool value){
+void pca9655::gpioDigitalWrite(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
 		writeWord(GPPU,_gpioState);
 	}
 }
 
-void pca9555::gpioDigitalWriteFast(uint8_t pin, bool value){
+void pca9655::gpioDigitalWriteFast(uint8_t pin, bool value){
 	if (pin < 16){//0...15
 		value == HIGH ? _gpioState |= (1 << pin) : _gpioState &= ~(1 << pin);
 	}
 }
 
-void pca9555::gpioPortUpdate(){
+void pca9655::gpioPortUpdate(){
 	writeWord(GPIO,_gpioState);
 }
 
-int pca9555::gpioDigitalRead(uint8_t pin){
+int pca9655::gpioDigitalRead(uint8_t pin){
 	if (pin < 16) return (int)(readAddress(GPIO) & 1 << pin);
 	return 0;
 }
 
-uint8_t pca9555::gpioRegisterReadByte(byte reg){
+uint8_t pca9655::gpioRegisterReadByte(byte reg){
   uint8_t data = 0;
 	if (!_error){
 		Wire.beginTransmission(_adrs);
@@ -154,16 +154,16 @@ uint8_t pca9555::gpioRegisterReadByte(byte reg){
 }
 
 
-void pca9555::gpioRegisterWriteByte(byte reg,byte data){
+void pca9655::gpioRegisterWriteByte(byte reg,byte data){
 	writeByte(reg,(byte)data);
 }
 
-void pca9555::gpioRegisterWriteWord(byte reg,word data){
+void pca9655::gpioRegisterWriteWord(byte reg,word data){
 	writeWord(reg,(word)data);
 }
 
 /* ------------------------------ Low Level ----------------*/
-void pca9555::writeByte(byte addr, byte data){
+void pca9655::writeByte(byte addr, byte data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
@@ -172,7 +172,7 @@ void pca9555::writeByte(byte addr, byte data){
 	}
 }
 
-void pca9555::writeWord(byte addr, uint16_t data){
+void pca9655::writeWord(byte addr, uint16_t data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?

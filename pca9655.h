@@ -9,11 +9,11 @@
 	
 model:			company:		pins:		protocol:		Special Features:
 ---------------------------------------------------------------------------------------------------------------------
-pca9555		      NTX		     16			I2C					INT/64 addresses
-tca9555		       TI		     16			I2C					INT/64 addresses
+pca9655		      NTX		     16			I2C					INT/64 addresses
+tca9655		       TI		     16			I2C					INT/64 addresses
 ---------------------------------------------------------------------------------------------------------------------
 Version history:
-0.8b4: Fixed an error for this chip
+0.1: initial support
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Version history:
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
-/* ------------------------------ PCA9555/TCA9555 WIRING ------------------------------------
+/* ------------------------------ PCA9655/TCA9655 WIRING ------------------------------------
 0x20...0xDE
 
 				__ __
@@ -125,15 +125,15 @@ SDA GND SDA 1  1  0  1  1  0  1  0xDA
 SDA V+  SCL 1  1  0  1  1  1  0  0xDC
 SDA V+  SDA 1  1  0  1  1  1  1  0xDE
 */
-#ifndef _PCA9555_H_
-#define _PCA9555_H_
+#ifndef _PCA9655_H_
+#define _PCA9655_H_
 
 #include <inttypes.h>
 
 #include "gpio_expander.h"
 
 
-class pca9555 : public gpio_expander
+class pca9655 : public gpio_expander
 {
 
 public:
