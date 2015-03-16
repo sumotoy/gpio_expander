@@ -137,8 +137,8 @@ class pca9655 : public gpio_expander
 {
 
 public:
-	pca9555(const uint8_t adrs);
-	pca9555();;//used with other libraries only
+	pca9655(const uint8_t adrs);
+	pca9655();;//used with other libraries only
 	void			postSetup(const uint8_t adrs);;//used with other libraries only
 	
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
