@@ -216,9 +216,11 @@ In the .h file of your existing library add this lines just after the aruino.h i
 	     bla
 	     
 	      mygpio.postSetup(_cs,_adrs);//you should set these 2 vars before!
+	      //if you want use SPI.Transactions you have another parameter...
+	      //mygpio.postSetup(_cs,_adrs,30000000);//set SPI transaction speed
 	      mygpio.begin();//put true if you want to init SPI (or I2C, depends of chip) manually!
-	      mygpio.gpioPinMode(OUTPUT);
-	      mygpio.gpioPort(0xFFFF);
+	      mygpio.gpioPinMode(OUTPUT);//es.
+	      mygpio.gpioPort(0xFFFF);//es.
 	      etc...
 	 }
 ```
