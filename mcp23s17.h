@@ -20,6 +20,7 @@ Version history:
 0.6b1: Changed gpioRegisterRead to gpioRegisterReadByte. Added gpioRegisterReadWord (for some GPIO)
 0.6b3: Added basic support for SPI transactions, small optimizations.
 0.8b3: Added 2 more commands and 2 gpio chip.
+0.8b4: gpioRegisterWriteByte have an optional parameter to write in both banks
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -75,6 +76,32 @@ A2,A1,A0 tied to ground = 0x20
 
 #include "_utility/SPI.parameters.h"
 
+
+/*   The IOCON register!
+		 7		6     5	     4     3   2     1    0
+IOCON = BANK MIRROR SEQOP DISSLW HAEN ODR INTPOL -NC-
+-----------------------------------------------------------------------
+0b01101100
+BANK: (Controls how the registers are addressed)
+1 The registers associated with each port are separated into different banks
+0 The registers are in the same bank (addresses are sequential)
+MIRROR: (INT Pins Mirror bit)
+1 The INT pins are internally connected
+0 The INT pins are not connected. INTA is associated with PortA and INTB is associated with PortB
+SEQOP: (Sequential Operation mode bit)
+1 Sequential operation disabled, address pointer does not increment
+0 Sequential operation enabled, address pointer increments.
+DISSLW: (Slew Rate control bit for SDA output, only I2C)
+HAEN: (Hardware Address Enable bit, SPI only)
+1 Enables the MCP23S17 address pins
+0 Disables the MCP23S17 address pins
+ODR: (This bit configures the INT pin as an open-drain output)
+1 Open-drain output (overrides the INTPOL bit).
+0 Active driver output (INTPOL bit sets the polarity).
+INTPOL: (This bit sets the polarity of the INT output pin)
+1 Active high
+0 Active low
+*/
 class mcp23s17 : public gpio_expander
 {
 
@@ -98,7 +125,8 @@ public:
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
-	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a byte in a chip register
+	void 			gpioRegisterWriteByte(byte reg,byte data,bool both=false);//write a byte in a chip register
+					//if both=true it will write the same register in bank A & B
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register
 	void			portPullup(uint16_t data);						// HIGH=all pullup, LOW=all pulldown,0xxxx=you choose witch
 	void			gpioPortUpdate();

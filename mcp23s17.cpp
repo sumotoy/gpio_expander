@@ -80,22 +80,15 @@ void mcp23s17::begin(bool protocolInitOverride) {
 			SPI.setDataMode(SPI_MODE0);
 		}
 		#else//do not use SPItransactons
-		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
-		SPI.setBitOrder(MSBFIRST);
-		SPI.setDataMode(SPI_MODE0);
+			SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
+			SPI.setBitOrder(MSBFIRST);
+			SPI.setDataMode(SPI_MODE0);
 		#endif
 	}	
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
 	delay(100);
 	_useHaen == 1 ? writeByte(IOCON,0b00101000) : writeByte(IOCON,0b00100000);
-	/*
-    if (_useHaen){
-		writeByte(IOCON,0b00101000);//read datasheet for details!
-	} else {
-		writeByte(IOCON,0b00100000);
-	}
-	*/
 	_gpioDirection = 0xFFFF;//all in
 	_gpioState = 0xFFFF;//all low 
 }
@@ -103,14 +96,15 @@ void mcp23s17::begin(bool protocolInitOverride) {
 
 
 uint16_t mcp23s17::readAddress(byte addr){
-	startSend(1);
-	SPI.transfer(addr);
-	byte low_byte  = SPI.transfer(0x0);
-	byte high_byte = SPI.transfer(0x0);
-	endSend();
-	uint16_t temp = low_byte | (high_byte << 8);
+
+		startSend(1);
+		SPI.transfer(addr);
+		byte low_byte  = SPI.transfer(0x0);
+		byte high_byte = SPI.transfer(0x0);
+		endSend();
+		uint16_t temp = low_byte | (high_byte << 8);
+
 	return temp;
-	//return byte2word(high_byte,low_byte);
 }
 
 
@@ -215,14 +209,22 @@ uint16_t mcp23s17::gpioRegisterReadWord(byte reg){
   uint16_t data = 0;
     startSend(1);
     SPI.transfer(reg);
-    data = SPI.transfer(0);
+	data = SPI.transfer(0);
 	data = SPI.transfer(0) << 8;
     endSend();
   return data;
 }
 
-void mcp23s17::gpioRegisterWriteByte(byte reg,byte data){
-	writeByte(reg,(byte)data);
+void mcp23s17::gpioRegisterWriteByte(byte reg,byte data,bool both){
+	if (!both){
+		writeByte(reg,(byte)data);
+	} else {
+		startSend(0);
+		SPI.transfer(reg);
+		SPI.transfer(data);
+		SPI.transfer(data);
+		endSend();
+	}
 }
 
 void mcp23s17::gpioRegisterWriteWord(byte reg,word data){
@@ -240,8 +242,10 @@ void mcp23s17::writeByte(byte addr, byte data){
 void mcp23s17::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
+
 	SPI.transfer(word2lowByte(data));
 	SPI.transfer(word2highByte(data));
+
 	endSend();
 }
 
