@@ -109,7 +109,7 @@ public:
 	mcp23s17(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
 	mcp23s17(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed);//for SPI transactions
 	mcp23s17();//For include inside other libraries
-	void 			postSetup(const uint8_t csPin,const uint8_t haenAdrs);//used with other libraries only
+	void 			postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed=0);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
     
 	void 			gpioPinMode(uint16_t mode);					//OUTPUT=all out,INPUT=all in,0xxxx=you choose
