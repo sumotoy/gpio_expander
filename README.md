@@ -169,7 +169,8 @@ Why create an unified library? It's better create single libraries for chip fami
  gpio.portPullup(HIGH or LOW or data);//Set pullup on input pin (not all chip!)
  //new commands from release 0.8b3
  gpio.gpioDigitalWriteFast(pin,Val);//It updates only the library pin register buffer! It do not send data to the GPIO
- //this is really useful when you need update separately some pin and the you will need the following command...
+ //this actually update only the mirrored register in library and act really fast since no communication with the chip
+ //so you can use to update many pins, when you call the command gpioPortUpdate you will send the updates to the chip!
  gpio.gpioPortUpdate();//this will effectively send the pin register to the GPIO chip! 
 
 ```
@@ -215,9 +216,9 @@ In the .h file of your existing library add this lines just after the aruino.h i
 	     bla
 	     bla
 	     
-	      mygpio.postSetup(_cs,_adrs);//you should set these 2 vars before!
+	      mygpio.postSetup(_cs,_adrs);//you should set these 2 vars before! (I2C use ALWAYS this)
 	      //if you want use SPI.Transactions you have another parameter...
-	      //mygpio.postSetup(_cs,_adrs,30000000);//set SPI transaction speed
+	      //mygpio.postSetup(_cs,_adrs,30000000);//set SPI transaction speed (Only for SPI!!!)
 	      mygpio.begin();//put true if you want to init SPI (or I2C, depends of chip) manually!
 	      mygpio.gpioPinMode(OUTPUT);//es.
 	      mygpio.gpioPort(0xFFFF);//es.
@@ -227,7 +228,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
   
   Since the library was already instanced and inited you can use the library function inside your library where you want but not forget to initialize it as I show above!<br>
   
-version <b>0.8b3</b> - beta release - only some driver released and partially tested!!!<br><br>
+version <b>0.8b4</b> - beta release - only some driver released and partially tested!!!<br><br>
 coded by Max MC Costa for s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 
 --------------------------------------------------------------------------------------
