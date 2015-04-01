@@ -20,6 +20,7 @@ Version history:
 0.6b1: Changed gpioRegisterRead to gpioRegisterReadByte. Added gpioRegisterReadWord (for some GPIO)
 0.6b3: Added basic support for SPI transactions, small optimizations.
 0.8b3: Added 2 more commands and 2 gpio chip.
+0.8b4: Support for SPI Transaction post setup
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -82,7 +83,7 @@ public:
 	mcp23s18(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
 	mcp23s18(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed);//for SPI transactions
 	mcp23s18();
-	void			postSetup(const uint8_t csPin,const uint8_t haenAdrs);//used with other libraries only
+	void			postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed=0);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
    

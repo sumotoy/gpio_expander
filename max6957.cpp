@@ -38,13 +38,14 @@ max6957::max6957(const uint8_t csPin,const uint8_t haenAdrs){
 }
 
 max6957::max6957(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
-	setSPIspeed(spispeed);
-	
-	postSetup(csPin,haenAdrs);
+	postSetup(csPin,haenAdrs,spispeed);
 }
 
 
-void max6957::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
+void max6957::postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
+	#if defined (SPI_HAS_TRANSACTION)
+		if (spispeed > 0) setSPIspeed(spispeed);
+	#endif
 	_cs = csPin;
 	if (haenAdrs > 0x19 && haenAdrs < 0x28){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;

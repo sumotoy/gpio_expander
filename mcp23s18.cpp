@@ -37,12 +37,13 @@ mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs){
 }
 
 mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
-	setSPIspeed(spispeed);
-	
-	postSetup(csPin,haenAdrs);
+	postSetup(csPin,haenAdrs,spispeed);
 }
 
 void mcp23s18::postSetup(const uint8_t csPin,const uint8_t haenAdrs){
+	#if defined (SPI_HAS_TRANSACTION)
+		if (spispeed > 0) setSPIspeed(spispeed);
+	#endif
 	_cs = csPin;
 	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
 		_adrs = haenAdrs;
