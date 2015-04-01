@@ -126,6 +126,24 @@ The MCP23xxx registers are stored in each chip library extension so you can shar
 Library is modular, every chip it's an extension of the same library so it's easy to expand.<br>
 Why create an unified library? It's better create single libraries for chip families? Seems no!<br>Almost all GPIO chips have really similar programming, only Microchip families has more features and looks more complicated but the access it's almost the same for all so it have sense to build up an unified way to access these chips with common commands so you can easily use the chip you like without have to recode anithing, just be sure you don't need some special features of some particular chip.<br>
 
+ <b>[TIP] I got a compile error with a chip library I'm not plan to use!</b>
+ 
+Since there are many chip drivers inside library, the compiler open every file but optimizations cause that unused stuff will not be included so do not worry if you see compiler include all the files, at the end it will not do this!. But for the same reason if there's any error or uncompatible stuff inside any of those files, the whole library will not compile! To solve this it's really simple, just move out from the library folder the driver .cpp and .h files that give the error, close and reopen IDE and try to compile again! Do not forget to drop me a note and I will fix it!
+ 
+ <b>[TIP] Can I update many pins individually in a fast way?</b>
+  
+ Yes! This library have an internal mirror of the pin registers so you can use the new function gpioDigitalWriteFast, you can use a lot since it will not communicate with te chip, once you have updated all pins you call gpioPortUpdate and the whole register will be sent to the chip in one cicle (or 2 for 16 bit ones).
+  
+ <b>[TIP] I will like to use the library inside another library, it's possible?</b>
+  
+  Yes! I've a special initialization command called postSetup. Follow instructions below...
+  
+ <b>[TIP] What about SPI transactions?</b>
+ 
+ The library it's fully compatible with SPI transactions! But it's not automatic since many users use this library inside other libraries so you can still use in legacy mode even if you have a SPI Transaction compatible IDE. You need to add a parameter to the instance to force SPI Transaction! es. mcp23s17 mcp(gpio_cs_pin,gpio_adrs,30000000);
+I've added a 30Mhz parameter to the end, Teensy will automatically select the higher frequency but you can use any frequency (supported) you want in relation tho the chip you are using, the lenght of SPI lines, etc. If you use SPI transactions remember that the other SPI devices have to use SPI Transaction compatible libraries too!
+ 
+
  <b>How To Use:</b>
  
  Library it's unified so you just need toi include the chip and his protocol, example for <b>mcp23017</b>
