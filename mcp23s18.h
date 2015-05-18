@@ -9,7 +9,7 @@
 	
 model:			company:		pins:		protocol:		Special Features:
 ---------------------------------------------------------------------------------------------------------------------
-mcp23s18		Microchip		 16			SPI					INT/HAEN/Open Collector
+mcp23s18		Microchip		 16			SPI					INT/OPEN DRAIN
 ---------------------------------------------------------------------------------------------------------------------
 Version history:
 0.5b1: first release, just coded and never tested
@@ -21,6 +21,7 @@ Version history:
 0.6b3: Added basic support for SPI transactions, small optimizations.
 0.8b3: Added 2 more commands and 2 gpio chip.
 0.8b4: Support for SPI Transaction post setup
+0.8b5: Support for 16bit spi transfer, fixed SPI init for this chip, fixed example, fixed wiring scheme
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -38,33 +39,26 @@ Version history:
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-	
-	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Version:0.8b3: Added 2 more commands and 2 gpio chip.
-	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
 
 /* ------------------------------ MCP23S18 WIRING ------------------------------------
-This chip has a very useful feature called HAEN that allow you to share the same CS pin trough
-8 different addresses. Of course chip has to be Microchip and should be assigned to different addresses!
+Address:  00100000 always 0x20
 
-Basic Address:  00100 A2 A1 A0 (from 0x20 to 0x27)
-A2,A1,A0 tied to ground = 0x20
 				__ __
-		IOB-0 [|  U  |] IOA-7
-		IOB-1 [|     |] IOA-6
-		IOB-2 [|     |] IOA-5
-		IOB-3 [|     |] IOA-4
-		IOB-4 [|     |] IOA-3
-		IOB-5 [|     |] IOA-2
-		IOB-6 [|     |] IOA-1
-		IOB-7 [|     |] IOA-0
-		++++  [|     |] INT-A
-		GND   [|     |] INT-B
-		CS    [|     |] RST (connect to +)
-		SCK   [|     |] A2
-		MOSI  [|     |] A1
-		MISO  [|_____|] A0
+		GROUND[|  U  |] NC
+		NC    [|     |] IOA-7
+		IOB-0 [|     |] IOA-6
+		IOB-1 [|     |] IOA-5
+		IOB-2 [|     |] IOA-4
+		IOB-3 [|     |] IOA-3
+		IOB-4 [|     |] IOA-2
+		IOB-5 [|     |] IOA-1
+		IOB-6 [|     |] IOA-0
+		IOB-7 [|     |] INT-A
+		+++++ [|     |] INT-B
+		CS    [|     |] NC
+		SCLK  [|     |] RST (connect to +)
+		MOSI  [|_____|] MISO
 */
 #ifndef _MCP23S18_H_
 #define _MCP23S18_H_
@@ -80,10 +74,10 @@ class mcp23s18 : public gpio_expander
 {
 
 public:
-	mcp23s18(const uint8_t csPin,const uint8_t haenAdrs);//any pin,0x20....0x27
+	mcp23s18(const uint8_t csPin,const uint8_t haenAdrs=0x20);//any pin,adrs not important, hardware coded at 0x20
 	mcp23s18(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed);//for SPI transactions
 	mcp23s18();
-	void			postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed=0);//used with other libraries only
+	void			postSetup(const uint8_t csPin,const uint8_t haenAdrs=0x20,uint32_t spispeed=0);//used with other libraries only
 	virtual void 	begin(bool protocolInitOverride=false); //protocolInitOverride=true	will not init the SPI	
 
    
@@ -100,7 +94,7 @@ public:
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
-	void 			gpioRegisterWriteByte(byte reg,byte data);		//write a byte in a chip register
+	void 			gpioRegisterWriteByte(byte reg,byte data,bool both=false);		//write a byte in a chip register
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register
 	void			portPullup(uint16_t data);						// HIGH=all pullup, LOW=all pulldown,0xxxx=you choose witch
 	void			gpioPortUpdate();

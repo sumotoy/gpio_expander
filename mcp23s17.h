@@ -21,6 +21,7 @@ Version history:
 0.6b3: Added basic support for SPI transactions, small optimizations.
 0.8b3: Added 2 more commands and 2 gpio chip.
 0.8b4: gpioRegisterWriteByte have an optional parameter to write in both banks
+0.8b5: support for 16 bit spi transfer
 ---------------------------------------------------------------------------------------------------------------------
 		Copyright (c) 2013-2014, s.u.m.o.t.o.y [sumotoy(at)gmail.com]
 ---------------------------------------------------------------------------------------------------------------------
@@ -125,7 +126,7 @@ public:
 	uint8_t		 	gpioRegisterReadByte(byte reg);					//read a byte from chip register
 	uint16_t		gpioRegisterReadWord(byte reg);					//read a word from chip register
 	int 			gpioDigitalReadFast(uint8_t pin);
-	void 			gpioRegisterWriteByte(byte reg,byte data,bool both=false);//write a byte in a chip register
+	void 			gpioRegisterWriteByte(byte reg,byte data,bool both=false);//write a byte in a chip register, optional for both ports
 					//if both=true it will write the same register in bank A & B
 	void 			gpioRegisterWriteWord(byte reg,word data);		//write a word in a chip register
 	void			portPullup(uint16_t data);						// HIGH=all pullup, LOW=all pulldown,0xxxx=you choose witch

@@ -33,11 +33,11 @@ void mcp23s18::setSPIspeed(uint32_t spispeed){
 
 mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs){
 	_spiTransactionsSpeed = 0;
-	postSetup(csPin,haenAdrs);
+	postSetup(csPin,0x20);
 }
 
 mcp23s18::mcp23s18(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
-	postSetup(csPin,haenAdrs,spispeed);
+	postSetup(csPin,0x20,spispeed);
 }
 
 void mcp23s18::postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spispeed){
@@ -45,13 +45,8 @@ void mcp23s18::postSetup(const uint8_t csPin,const uint8_t haenAdrs,uint32_t spi
 		if (spispeed > 0) setSPIspeed(spispeed);
 	#endif
 	_cs = csPin;
-	if (haenAdrs >= 0x20 && haenAdrs <= 0x27){//HAEN works between 0x20...0x27
-		_adrs = haenAdrs;
-		_useHaen = 1;
-	} else {
-		_adrs = 0;
-		_useHaen = 0;
-	}
+	_useHaen = 0;
+	_adrs = 0x20;
 	_readCmd =  (_adrs << 1) | 1;
 	_writeCmd = _adrs << 1;
 	//setup register values for this chip
@@ -72,28 +67,21 @@ void mcp23s18::begin(bool protocolInitOverride) {
 	if (!protocolInitOverride){
 		SPI.begin();
 		#if defined (SPI_HAS_TRANSACTION)
-		if (_spiTransactionsSpeed == 0){//do not use SPItransactons
+			if (_spiTransactionsSpeed == 0){//do not use SPItransactons
+				SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
+				SPI.setBitOrder(MSBFIRST);
+				SPI.setDataMode(SPI_MODE0);
+			}
+		#else//do not use SPItransactons
 			SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 			SPI.setBitOrder(MSBFIRST);
 			SPI.setDataMode(SPI_MODE0);
-		}
-		#else//do not use SPItransactons
-		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
-		SPI.setBitOrder(MSBFIRST);
-		SPI.setDataMode(SPI_MODE0);
 		#endif
 	}		
 	pinMode(_cs, OUTPUT);
 	digitalWrite(_cs, HIGH);
 	delay(100);
-	_useHaen == 1 ? writeByte(IOCON,0b00101000) : writeByte(IOCON,0b00100000);
-	/*
-    if (_useHaen){
-		writeByte(IOCON,0b00101000);//read datasheet for details!
-	} else {
-		writeByte(IOCON,0b00100000);
-	}
-	*/
+	writeByte(IOCON,0b00100000);
 	_gpioDirection = 0xFFFF;//all in
 	_gpioState = 0x0000;//all low 
 }
@@ -103,13 +91,19 @@ void mcp23s18::begin(bool protocolInitOverride) {
 
 
 uint16_t mcp23s18::readAddress(byte addr){
-	byte low_byte = 0x00;
 	startSend(1);
 	SPI.transfer(addr);
-	low_byte  = SPI.transfer(0x0);
-	byte high_byte = SPI.transfer(0x0);
-	endSend();
-	return byte2word(high_byte,low_byte);
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		uint16_t temp = SPI.transfer16(0x0);
+		endSend();
+		return temp;
+	#else
+		byte low_byte  = SPI.transfer(0x0);
+		byte high_byte = SPI.transfer(0x0);
+		endSend();
+		uint16_t temp = low_byte | (high_byte << 8);
+		return temp;
+	#endif
 }
 
 
@@ -146,7 +140,7 @@ void mcp23s18::gpioPort(uint16_t value){
 }
 
 void mcp23s18::gpioPort(byte lowByte, byte highByte){
-	_gpioState = byte2word(highByte,lowByte);
+	_gpioState = highByte | (lowByte << 8);
 	writeWord(GPIO,_gpioState);
 }
 
@@ -159,12 +153,16 @@ uint16_t mcp23s18::readGpioPortFast(){
 	return _gpioState;
 }
 
-int mcp23s18::gpioDigitalReadFast(uint8_t pin){
-	int temp = 0;
-	if (pin < 16) temp = bitRead(_gpioState,pin);
-	return temp;
+void mcp23s18::portPullup(uint16_t data) {
+	if (data == HIGH){
+		_gpioState = 0xFFFF;
+	} else if (data == LOW){	
+		_gpioState = 0x0000;
+	} else {
+		_gpioState = data;
+	}
+	writeWord(GPPU, _gpioState);
 }
-
 
 
 void mcp23s18::gpioDigitalWrite(uint8_t pin, bool value){
@@ -189,6 +187,13 @@ int mcp23s18::gpioDigitalRead(uint8_t pin){
 	return 0;
 }
 
+int mcp23s18::gpioDigitalReadFast(uint8_t pin){
+	int temp = 0;
+	if (pin < 16) temp = bitRead(_gpioState,pin);
+	return temp;
+}
+
+
 uint8_t mcp23s18::gpioRegisterReadByte(byte reg){
   uint8_t data = 0;
     startSend(1);
@@ -202,31 +207,43 @@ uint16_t mcp23s18::gpioRegisterReadWord(byte reg){
   uint16_t data = 0;
     startSend(1);
     SPI.transfer(reg);
-    data = SPI.transfer(0);
-	data = SPI.transfer(0) << 8;
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		data = SPI.transfer16(0);
+	#else
+		data = SPI.transfer(0);
+		data = SPI.transfer(0) << 8;
+	#endif
     endSend();
   return data;
 }
 
-void mcp23s18::gpioRegisterWriteByte(byte reg,byte data){
-	writeByte(reg,(byte)data);
+// void mcp23s18::gpioRegisterWriteByte(byte reg,byte data){
+	// writeByte(reg,(byte)data);
+// }
+
+void mcp23s18::gpioRegisterWriteByte(byte reg,byte data,bool both){
+	if (!both){
+		writeByte(reg,(byte)data);
+	} else {
+		startSend(0);
+		SPI.transfer(reg);
+		#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+			SPI.transfer16(data);
+		#else
+			SPI.transfer(data);
+			SPI.transfer(data);
+		#endif
+		endSend();
+	}
 }
+
 
 void mcp23s18::gpioRegisterWriteWord(byte reg,word data){
 	writeWord(reg,(word)data);
 }
 
 
-void mcp23s18::portPullup(uint16_t data) {
-	if (data == HIGH){
-		_gpioState = 0xFFFF;
-	} else if (data == LOW){	
-		_gpioState = 0x0000;
-	} else {
-		_gpioState = data;
-	}
-	writeWord(GPPU, _gpioState);
-}
+
 
 /* ------------------------------ Low Level ----------------*/
 
@@ -240,8 +257,12 @@ void mcp23s18::writeByte(byte addr, byte data){
 void mcp23s18::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
-	SPI.transfer(word2lowByte(data));
-	SPI.transfer(word2highByte(data));
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		SPI.transfer16(data);
+	#else
+		SPI.transfer(word2lowByte(data));
+		SPI.transfer(word2highByte(data));
+	#endif
 	endSend();
 }
 

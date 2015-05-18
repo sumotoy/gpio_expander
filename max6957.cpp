@@ -106,13 +106,19 @@ void max6957::begin(bool protocolInitOverride) {
 
 
 uint16_t max6957::readAddress(byte addr){
-	byte low_byte = 0x00;
 	startSend(1);
 	SPI.transfer(addr);
-	low_byte  = SPI.transfer(0x0);
-	byte high_byte = SPI.transfer(0x0);
-	endSend();
-	return byte2word(high_byte,low_byte);
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		uint16_t temp = SPI.transfer16(0x0);
+		endSend();
+		return temp;
+	#else
+		byte low_byte  = SPI.transfer(0x0);
+		byte high_byte = SPI.transfer(0x0);
+		endSend();
+		uint16_t temp = low_byte | (high_byte << 8);
+		return temp;
+	#endif
 }
 
 
@@ -149,7 +155,7 @@ void max6957::gpioPort(uint16_t value){
 }
 
 void max6957::gpioPort(byte lowByte, byte highByte){
-	_gpioState = byte2word(highByte,lowByte);
+	_gpioState = highByte | (lowByte << 8);
 	writeWord(GPIO,_gpioState);
 }
 
@@ -216,8 +222,12 @@ uint16_t max6957::gpioRegisterReadWord(byte reg){
   uint16_t data = 0;
     startSend(1);
     SPI.transfer(reg);
-    data = SPI.transfer(0);
-	data = SPI.transfer(0) << 8;
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		data = SPI.transfer16(0);
+	#else
+		data = SPI.transfer(0);
+		data = SPI.transfer(0) << 8;
+	#endif
     endSend();
   return data;
 }
@@ -241,8 +251,12 @@ void max6957::writeByte(byte addr, byte data){
 void max6957::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
-	SPI.transfer(word2lowByte(data));
-	SPI.transfer(word2highByte(data));
+	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
+		SPI.transfer16(data);
+	#else
+		SPI.transfer(word2lowByte(data));
+		SPI.transfer(word2highByte(data));
+	#endif
 	endSend();
 }
 
