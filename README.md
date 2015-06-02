@@ -25,7 +25,7 @@ Here's a list of the <b>GPIO's chip managed</b>:<br>
 <td><b>mcp23s08</b></td><td>Microchip</td><td>8</td><td>SPI</td><td>HAEN/INT</td><td>done</td>
 </tr>
 <tr>
-<td><b>mcp23s18</b></td><td>Microchip</td><td>16</td><td>SPI</td><td>HAEN/INT</td><td>done</td>
+<td><b>mcp23s18</b></td><td>Microchip</td><td>16</td><td>SPI</td><td>OPEN DRAIN/INT</td><td>done</td>
 </tr>
 <tr>
 <td><b>mcp23018</b></td><td>Microchip</td><td>16</td><td>I2C</td><td>INT</td><td>done</td>
