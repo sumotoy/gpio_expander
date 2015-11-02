@@ -281,12 +281,8 @@ void mcp23s18::writeByte(byte addr, byte data){
 void mcp23s18::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
-	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
-		SPI.transfer16(data);
-	#else
 		SPI.transfer(word2lowByte(data));
 		SPI.transfer(word2highByte(data));
-	#endif
 	endSend();
 }
 

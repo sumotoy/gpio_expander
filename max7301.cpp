@@ -247,12 +247,8 @@ uint16_t max7301::gpioRegisterReadWord(byte reg){
   uint16_t data = 0;
     startSend(1);
     SPI.transfer(reg);
-	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
-		data = SPI.transfer16(0);
-	#else
 		data = SPI.transfer(0);
 		data = SPI.transfer(0) << 8;
-	#endif
     endSend();
   return data;
 }

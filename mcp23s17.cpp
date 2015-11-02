@@ -253,12 +253,8 @@ void mcp23s17::gpioRegisterWriteByte(byte reg,byte data,bool both){
 	} else {
 		startSend(0);
 		SPI.transfer(reg);
-		#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
-			SPI.transfer16(data);
-		#else
 			SPI.transfer(data);
 			SPI.transfer(data);
-		#endif
 		endSend();
 	}
 }
