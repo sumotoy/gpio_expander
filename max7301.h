@@ -228,7 +228,7 @@ public:
 	void			gpioPortUpdate();
 	// direct access commands
 	uint16_t 		readAddress(byte addr);
-	
+	int 			getInterruptNumber(byte pin);
 	void			setSPIspeed(uint32_t spispeed);//for SPI transactions
 	
 	//------------------------- REGISTERS

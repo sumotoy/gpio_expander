@@ -32,6 +32,30 @@ void max6957::setSPIspeed(uint32_t spispeed){
 }
 
 
+//return 255 if the choosed pin has no INT, otherwise return INT number
+//if there's support for SPI transactions it will use SPI.usingInterrupt(intNum);
+//to prevent problems from interrupt
+/*USE:
+  int intNumber = mcp.getInterruptNumber(gpio_int_pin);
+  if (intNumber < 255){
+    attachInterrupt(intNumber, keypress, FALLING);//attack interrupt
+  } else {
+    Serial.println("sorry, pin has no INT capabilities!");
+  }
+ */
+
+int max6957::getInterruptNumber(byte pin) {
+	int intNum = digitalPinToInterrupt(pin);
+	if (intNum != NOT_AN_INTERRUPT) {
+		#if defined (SPI_HAS_TRANSACTION)
+			SPI.usingInterrupt(intNum);
+		#endif
+		return intNum;
+	}
+	return 255;
+}
+
+
 max6957::max6957(const uint8_t csPin,const uint8_t haenAdrs){
 	_spiTransactionsSpeed = 0;
 	postSetup(csPin,haenAdrs);

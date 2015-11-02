@@ -135,6 +135,7 @@ public:
 	uint16_t 		readAddress(byte addr);
 	
 	void			setSPIspeed(uint32_t spispeed);//for SPI transactions
+	int 			getInterruptNumber(byte pin);
 	
 	//------------------------- REGISTERS
 	byte			IOCON;

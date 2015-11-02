@@ -45,6 +45,7 @@ gpioRegisterWriteByte	KEYWORD2
 gpioRegisterWriteWord	KEYWORD2
 portPullup	KEYWORD2
 gpioPortUpdate	KEYWORD2
+getInterruptNumber	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
