@@ -275,8 +275,10 @@ void max7301::writeWord(byte addr, uint16_t data){
 	#if !defined(__SAM3X8E__) && ((ARDUINO >= 160) || (TEENSYDUINO > 121))
 		SPI.transfer16(data);
 	#else
-		SPI.transfer(word2lowByte(data));
-		SPI.transfer(word2highByte(data));
+		//SPI.transfer(word2lowByte(data));
+		//SPI.transfer(word2highByte(data));
+			SPI.transfer(data >> 8);
+			SPI.transfer(data & 0xFF);
 	#endif
 	endSend();
 }

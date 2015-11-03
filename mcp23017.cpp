@@ -206,8 +206,10 @@ void mcp23017::writeWord(byte addr, uint16_t data){
 	if (!_error){
 		Wire.beginTransmission(_adrs);
 		Wire.write(addr);//witch register?
-		Wire.write(word2lowByte(data));
-		Wire.write(word2highByte(data));
+		//Wire.write(word2lowByte(data));
+		//Wire.write(word2highByte(data));
+		Wire.write(data >> 8);
+		Wire.write(data & 0xFF);
 		Wire.endTransmission();
 	}	
 }

@@ -281,8 +281,10 @@ void mcp23s18::writeByte(byte addr, byte data){
 void mcp23s18::writeWord(byte addr, uint16_t data){
 	startSend(0);
 	SPI.transfer(addr);
-		SPI.transfer(word2lowByte(data));
-		SPI.transfer(word2highByte(data));
+		//SPI.transfer(word2lowByte(data));
+		//SPI.transfer(word2highByte(data));
+			SPI.transfer(data >> 8);
+			SPI.transfer(data & 0xFF);
 	endSend();
 }
 
