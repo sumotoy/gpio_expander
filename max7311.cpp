@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "max7311.h"
-#include <../Wire/Wire.h>//this chip uses wire
+#include <Wire.h>//this chip uses wire
 
 max7311::max7311(){
 

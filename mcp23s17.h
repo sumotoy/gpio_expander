@@ -73,7 +73,7 @@ A2,A1,A0 tied to ground = 0x20
 #include <inttypes.h>
 
 #include "gpio_expander.h"
-#include <../SPI/SPI.h>//this chip needs SPI
+#include <SPI.h>//this chip needs SPI
 
 #include "_utility/SPI.parameters.h"
 

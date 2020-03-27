@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "mcp23016.h"
-#include <../Wire/Wire.h>//this chip uses wire
+#include <Wire.h>//this chip uses wire
 
 mcp23016::mcp23016(){
 

@@ -195,7 +195,7 @@ XXXXX
 #include <inttypes.h>
 
 #include "gpio_expander.h"
-#include <../SPI/SPI.h>//this chip needs SPI
+#include <SPI.h>//this chip needs SPI
 
 #include "_utility/SPI.parameters.h"
 

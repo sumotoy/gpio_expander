@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "pcf8574a.h"
-#include <../Wire/Wire.h>//this chip uses wire
+#include <Wire.h>//this chip uses wire
 
 pcf8574a::pcf8574a(){
 
