@@ -207,7 +207,7 @@ In the .h file of your existing library add this lines just after the aruino.h i
 #include "yourlib.h"
 
 //here start the include
-#include <../SPI/SPI.h>//this chip needs SPI
+#include <SPI.h>//this chip needs SPI
 #include <../gpio_expander/mcp23s17.h>
 //here ends
 ```

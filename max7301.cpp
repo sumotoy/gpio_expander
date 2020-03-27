@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "max7301.h"
-#include <../SPI/SPI.h>//this chip needs SPI
+#include <SPI.h>//this chip needs SPI
 
 max7301::max7301(){
 #if defined (SPI_HAS_TRANSACTION)

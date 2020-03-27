@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "pca9655.h"
-#include <../Wire/Wire.h>//this chip uses wire
+#include <Wire.h>//this chip uses wire
 
 pca9655::pca9655(){
 

@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "mcp23s18.h"
-#include <../SPI/SPI.h>//this chip needs SPI
+#include <SPI.h>//this chip needs SPI
 
 mcp23s18::mcp23s18(){
 #if defined (SPI_HAS_TRANSACTION)
