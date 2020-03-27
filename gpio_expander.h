@@ -33,6 +33,10 @@
 #ifndef _GPIO_EXPANDER_H_
 #define _GPIO_EXPANDER_H_
 
+#ifndef NOT_AN_INTERRUPT
+#define NOT_AN_INTERRUPT -1
+#endif
+
 #include <inttypes.h>
 #include <Arduino.h>
 
