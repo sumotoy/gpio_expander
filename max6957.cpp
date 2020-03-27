@@ -8,7 +8,7 @@
 #include <../SPI/SPI.h>//this chip needs SPI
 
 max6957::max6957(){
-#if defined (SPI_HAS_TRANSACTION)
+#if defined (SPI_HAS_TRANSACTION) && (MAXSPISPEED)
 	_spiTransactionsSpeed = MAXSPISPEED;//set to max supported speed (in relation to chip and CPU)
 #else
 	_spiTransactionsSpeed = 0;
@@ -16,7 +16,7 @@ max6957::max6957(){
 }
 
 void max6957::setSPIspeed(uint32_t spispeed){
-	#if defined (SPI_HAS_TRANSACTION)
+	#if defined (SPI_HAS_TRANSACTION) && (MAXSPISPEED)
 	if (spispeed > 0){
 		if (spispeed > MAXSPISPEED) {
 			_spiTransactionsSpeed = MAXSPISPEED;
